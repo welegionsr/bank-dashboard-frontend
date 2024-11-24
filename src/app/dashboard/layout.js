@@ -1,15 +1,14 @@
 import TopNav from "@components/TopNav";
+import { Container } from "react-bootstrap";
 
 
 export default function DashboardLayout({ children }) {
     return (
-        <html lang="en">
-            <body>
-                <TopNav/>
-                <main className="login-layout">
-                    {children}
-                </main>
-            </body>
-        </html>
+        <Container fluid>
+            <TopNav />
+            <main className="dashboard-layout mt-4">
+                {children}
+            </main>
+        </Container>
     );
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from "next/navigation";
-import { Button } from "react-bootstrap";
+import { Button, Container, Row } from "react-bootstrap";
 
 export default function Home() {
   const router = useRouter();
@@ -11,9 +11,11 @@ export default function Home() {
   };
 
   return (
-    <div>
-      <h1>Welcome to GoldFront Bank Dashboard</h1>
-      <button onClick={handleLoginRedirect}>Go to Login</button>
-    </div>
+    <Container className="justify-content-md-center">
+      <Row>
+        <h1>Welcome to GoldFront Bank Dashboard</h1>
+        <Button variant="primary" onClick={handleLoginRedirect}>Go to Dashboard</Button>
+      </Row>
+    </Container>
   );
 }

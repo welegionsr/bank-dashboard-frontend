@@ -1,6 +1,6 @@
 'use client';
 
-import { Alert, Button, Container, Form } from "react-bootstrap";
+import { Alert, Button, Container, Form, Spinner } from "react-bootstrap";
 import apiClient from "@utils/api";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -63,7 +63,7 @@ export default function LoginPage() {
 
     if (loading) {
         // Optionally, show a loading indicator while checking the token
-        return <div>Loading...</div>;
+        return <Spinner animation="grow" />;
     }
 
     return (
