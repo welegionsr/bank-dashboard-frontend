@@ -1,17 +1,43 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import apiClient from "@/utils/api";
+import { useUser } from "@/utils/UserContext";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { Button, Card, Container, ListGroup } from "react-bootstrap";
 
 export default function DashboardPage() {
-    const [token, setToken] = useState(null);
+    const {token, user, setUser, setToken} = useUser();
+    const router = useRouter();
+
+    const handleLogout = () => {
+        setToken(null);
+        setUser(null);
+
+        router.push('/login');
+    };
 
     useEffect(() => {
-        // Access localStorage only on the client side
-        const savedToken = localStorage.getItem('user-token');
-        setToken(savedToken);
-    }, []);  // Empty dependency array ensures this runs only once on mount
-    
+        const fetchUserDetails = async () => {
+            try {
+                // Attach the token to the Authorization header
+                const response = await apiClient.get(`/user/${user.id}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`, // Add the token here
+                    },
+                });
+
+                // Handle the response data (e.g., set it to state or context)
+                console.log('User details:', response.data);
+            } catch (err) {
+                // Handle errors (e.g., log them or show a message)
+                console.error('Error fetching user details:', err.response?.data || err.message);
+            }
+        };
+
+        fetchUserDetails(); // Call the async function
+    }, []); // Empty dependency array to run only when the component mounts
+
     return (
         <Container>
             <Card style={{ width: '32rem' }}>
@@ -32,6 +58,7 @@ export default function DashboardPage() {
                 <Card.Body>
                     <Button variant="primary">Transfer Money</Button>
                     <Button variant="secondary">Add Money</Button>
+                    <Button variant="secondary" onClick={handleLogout}>Log out</Button>
                 </Card.Body>
             </Card>
             

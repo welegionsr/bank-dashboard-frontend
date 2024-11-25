@@ -4,6 +4,7 @@ import { Alert, Button, Container, Form, Spinner } from "react-bootstrap";
 import apiClient from "@utils/api";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useUser } from "@/utils/UserContext";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -12,12 +13,13 @@ export default function LoginPage() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(true);
 
+    const {setUser, token, setToken} = useUser();
+
 
     // first check if the user is already logged in
     // by checking if there's a valid token on component mount
     useEffect(() => {
         const checkToken = async () => {
-            const token = localStorage.getItem('user-token');
 
             if (!token) {
                 setLoading(false);  // No token, allow the user to log in
@@ -30,6 +32,7 @@ export default function LoginPage() {
 
                 if (response.status === 200) {
                     // Token is valid, redirect to /dashboard
+                    console.log('userId from token: ' ,response.data.userId);
                     router.push('/dashboard');
                 }
             } catch (error) {
@@ -40,7 +43,7 @@ export default function LoginPage() {
         };
 
         checkToken();
-    }, [router]);
+    }, [token, router]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -49,7 +52,8 @@ export default function LoginPage() {
         {
             const response = await apiClient.post('/auth/login', {email, password});
 
-            localStorage.setItem('user-token', response.data.token);
+            setToken(response.data.token);
+            setUser({id: response.data.userId});
 
             // redirect to the dashboard page
             router.push('/dashboard');
