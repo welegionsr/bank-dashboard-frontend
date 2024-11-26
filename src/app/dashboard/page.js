@@ -1,17 +1,70 @@
 'use client';
 
+import apiClient from "@/utils/api";
+import { useUser } from "@/utils/UserContext";
+import { useRouter } from "next/navigation";
+import { parseCookies } from "nookies";
 import { useEffect, useState } from "react";
-import { Button, Card, Container, ListGroup } from "react-bootstrap";
+import { Button, Card, Container, ListGroup, Spinner } from "react-bootstrap";
+
 
 export default function DashboardPage() {
-    const [token, setToken] = useState(null);
+    const router = useRouter();
+    const { token } = parseCookies();
+    const {user, setUser} = useUser();
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Access localStorage only on the client side
-        const savedToken = localStorage.getItem('user-token');
-        setToken(savedToken);
-    }, []);  // Empty dependency array ensures this runs only once on mount
-    
+        const fetchUserDetails = async () => {
+            if (!token) 
+            {
+                console.log("NO TOKEN!");
+                router.push('/login');
+                return;
+            }
+
+            // Prevent fetching if user is already loaded
+            if (user) return;
+
+            try 
+            {
+                const response = await apiClient.get(`/users/me`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (response.data && response.data.user) {
+                    console.log("User details:", response.data.user);
+                    setUser(response.data.user);
+                } else {
+                    // If user data is invalid or missing
+                    console.error("Invalid user data");
+                    handleLogout();
+                }
+            } 
+            catch (error) 
+            {
+                console.error("Error fetching user details:", error);
+                handleLogout();
+            }
+            finally 
+            {
+                setLoading(false);  // Set loading to false after the request
+            }
+        };
+
+        fetchUserDetails();
+    }, []);
+
+
+    const handleLogout = () => {
+        document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+        setUser(null);
+        router.push('/login');
+    };
+
+
     return (
         <Container>
             <Card style={{ width: '32rem' }}>
@@ -24,14 +77,20 @@ export default function DashboardPage() {
                     </Card.Text>
                 </Card.Body>
                 <ListGroup className="list-group-flush">
-                    <ListGroup.Item>Name: XXX XXXXX</ListGroup.Item>
-                    <ListGroup.Item>Email: XXX@XX.com</ListGroup.Item>
-                    <ListGroup.Item>Phone: 1234567890</ListGroup.Item>
-                    <ListGroup.Item>Balance: XXX</ListGroup.Item>
+                    {loading && <Spinner animation="grow" />}
+                    {user && (
+                        <>
+                            <ListGroup.Item>Name: {user.name}</ListGroup.Item>
+                            <ListGroup.Item>Email: {user.email}</ListGroup.Item>
+                            <ListGroup.Item>Phone: {user.phone}</ListGroup.Item>
+                            <ListGroup.Item>Balance: {user.balance}</ListGroup.Item>
+                        </>
+                    )}
                 </ListGroup>
                 <Card.Body>
                     <Button variant="primary">Transfer Money</Button>
                     <Button variant="secondary">Add Money</Button>
+                    <Button variant="secondary" onClick={handleLogout}>Log out</Button>
                 </Card.Body>
             </Card>
             
