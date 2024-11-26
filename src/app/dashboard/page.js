@@ -3,40 +3,67 @@
 import apiClient from "@/utils/api";
 import { useUser } from "@/utils/UserContext";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { Button, Card, Container, ListGroup } from "react-bootstrap";
+import { parseCookies } from "nookies";
+import { useEffect, useState } from "react";
+import { Button, Card, Container, ListGroup, Spinner } from "react-bootstrap";
+
 
 export default function DashboardPage() {
-    const {token, user, setUser, setToken} = useUser();
     const router = useRouter();
-
-    const handleLogout = () => {
-        setToken(null);
-        setUser(null);
-
-        router.push('/login');
-    };
+    const { token } = parseCookies();
+    const {user, setUser} = useUser();
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchUserDetails = async () => {
-            try {
-                // Attach the token to the Authorization header
-                const response = await apiClient.get(`/user/${user.id}`, {
+            if (!token) 
+            {
+                console.log("NO TOKEN!");
+                router.push('/login');
+                return;
+            }
+
+            // Prevent fetching if user is already loaded
+            if (user) return;
+
+            try 
+            {
+                const response = await apiClient.get(`/users/me`, {
                     headers: {
-                        Authorization: `Bearer ${token}`, // Add the token here
+                        Authorization: `Bearer ${token}`,
                     },
                 });
 
-                // Handle the response data (e.g., set it to state or context)
-                console.log('User details:', response.data);
-            } catch (err) {
-                // Handle errors (e.g., log them or show a message)
-                console.error('Error fetching user details:', err.response?.data || err.message);
+                if (response.data && response.data.user) {
+                    console.log("User details:", response.data.user);
+                    setUser(response.data.user);
+                } else {
+                    // If user data is invalid or missing
+                    console.error("Invalid user data");
+                    handleLogout();
+                }
+            } 
+            catch (error) 
+            {
+                console.error("Error fetching user details:", error);
+                handleLogout();
+            }
+            finally 
+            {
+                setLoading(false);  // Set loading to false after the request
             }
         };
 
-        fetchUserDetails(); // Call the async function
-    }, []); // Empty dependency array to run only when the component mounts
+        fetchUserDetails();
+    }, []);
+
+
+    const handleLogout = () => {
+        document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+        setUser(null);
+        router.push('/login');
+    };
+
 
     return (
         <Container>
@@ -50,10 +77,15 @@ export default function DashboardPage() {
                     </Card.Text>
                 </Card.Body>
                 <ListGroup className="list-group-flush">
-                    <ListGroup.Item>Name: XXX XXXXX</ListGroup.Item>
-                    <ListGroup.Item>Email: XXX@XX.com</ListGroup.Item>
-                    <ListGroup.Item>Phone: 1234567890</ListGroup.Item>
-                    <ListGroup.Item>Balance: XXX</ListGroup.Item>
+                    {loading && <Spinner animation="grow" />}
+                    {user && (
+                        <>
+                            <ListGroup.Item>Name: {user.name}</ListGroup.Item>
+                            <ListGroup.Item>Email: {user.email}</ListGroup.Item>
+                            <ListGroup.Item>Phone: {user.phone}</ListGroup.Item>
+                            <ListGroup.Item>Balance: {user.balance}</ListGroup.Item>
+                        </>
+                    )}
                 </ListGroup>
                 <Card.Body>
                     <Button variant="primary">Transfer Money</Button>

@@ -4,7 +4,7 @@ import { Alert, Button, Container, Form, Spinner } from "react-bootstrap";
 import apiClient from "@utils/api";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useUser } from "@/utils/UserContext";
+import { parseCookies, setCookie } from "nookies";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -13,7 +13,7 @@ export default function LoginPage() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(true);
 
-    const {setUser, token, setToken} = useUser();
+    const { token } = parseCookies();
 
 
     // first check if the user is already logged in
@@ -32,7 +32,6 @@ export default function LoginPage() {
 
                 if (response.status === 200) {
                     // Token is valid, redirect to /dashboard
-                    console.log('userId from token: ' ,response.data.userId);
                     router.push('/dashboard');
                 }
             } catch (error) {
@@ -43,23 +42,24 @@ export default function LoginPage() {
         };
 
         checkToken();
-    }, [token, router]);
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        try 
-        {
-            const response = await apiClient.post('/auth/login', {email, password});
+        try {
+            const response = await apiClient.post('/auth/login', { email, password });
 
-            setToken(response.data.token);
-            setUser({id: response.data.userId});
+            // Save the token in a cookie
+            setCookie(null, 'token', response.data.token, {
+                maxAge: 30 * 24 * 60 * 60, // 30 days
+                path: '/', // Accessible on all pages
+            });
 
             // redirect to the dashboard page
             router.push('/dashboard');
         }
-        catch (err)
-        {
+        catch (err) {
             console.error('Login error:', err.response?.data?.message || 'Login failed');
             setError('Invalid email or password!');
         }
@@ -76,25 +76,23 @@ export default function LoginPage() {
             <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="formEmail">
                     <Form.Label>Email address</Form.Label>
-                    <Form.Control type="email" placeholder="..." value={email} onChange={(e) => setEmail(e.target.value)} required/>
+                    <Form.Control type="email" placeholder="..." value={email} onChange={(e) => setEmail(e.target.value)} required />
                     <Form.Text className="text-muted">
                         The email address you used to sign up.
                     </Form.Text>
                 </Form.Group>
 
-                <Form.Group className="mb-3" controlid="formPassword">
+                <Form.Group className="mb-3" controlId="formPassword">
                     <Form.Label>Password</Form.Label>
-                    <Form.Control type="password" placeholder="..." value={password} onChange={(e) => setPassword(e.target.value)} required/>
+                    <Form.Control type="password" placeholder="..." value={password} onChange={(e) => setPassword(e.target.value)} required />
                 </Form.Group>
 
-                {
-                    error != '' &&
-                        <Alert variant="warning">{error}</Alert>
-                }
-                
 
-                <Button variant="primary" type="submit">
-                    Login
+                {error && <Alert variant="warning">{error}</Alert>}
+
+
+                <Button variant="primary" type="submit" disabled={loading}>
+                    {loading ? 'Logging in...' : 'Login'}
                 </Button>
             </Form>
         </Container>
