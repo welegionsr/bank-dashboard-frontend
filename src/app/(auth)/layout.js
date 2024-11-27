@@ -1,11 +1,13 @@
 'use client';
 
+import '@/app/(auth)/auth.css';
+
 import apiClient from "@/utils/api";
 import TopNav from "@components/TopNav";
 import { useRouter } from "next/navigation";
 import { parseCookies } from "nookies";
 import { createContext, useContext, useEffect, useState } from "react";
-import { Alert, Spinner } from "react-bootstrap";
+import { Alert, Col, Row, Spinner } from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 
 
@@ -70,15 +72,19 @@ export default function DashboardLayout({ children }) {
 
     return (
         <AuthContext.Provider value={{ message, setMessage, messageType, setMessageType, setJustRegistered }}>
-            <Container fluid>
-                <TopNav />
+            <TopNav />
+            <Container fluid className="auth-layout">
+                <Row>
+                    <Col xs={0} md={7} xl={8}>
 
-                <h2 style={{ textAlign: "center" }}> * User Authentication * </h2>
-
-                <main className="auth-layout mt-4">
-                    {message && <Alert variant={messageType}>{message}</Alert>}
-                    {children}
-                </main>
+                    </Col>
+                    <Col className="form-section" xs={12} md={5} xl={4} >
+                        <main className="form-card">
+                            {message && <Alert variant={messageType}>{message}</Alert>}
+                            {children}
+                        </main>
+                    </Col>
+                </Row>
             </Container>
         </AuthContext.Provider>
     );

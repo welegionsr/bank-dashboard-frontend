@@ -44,7 +44,7 @@ export default function LoginPage() {
 
     return (
         <Container className="mt-4">
-            <Card style={{ width: '32rem' }}>
+            <Card style={{ width: 'auto', minWidth: '16rem' }}>
                 <Card.Header>
                     Sign in to your account!
                 </Card.Header>

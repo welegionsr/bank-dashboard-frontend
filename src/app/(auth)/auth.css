@@ -1,0 +1,25 @@
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh; 
+  background-image: url('/images/auth-background.webp');
+  background-size: cover;
+  background-position: center; 
+  background-repeat: no-repeat; 
+  background-attachment: fixed; 
+}
+
+.auth-layout {
+  height: 100vh;  /* Makes sure the main container fills the viewport */
+  justify-content: center;
+  align-items: center;
+}
+
+.form-section {
+    height: 100vh;
+    background-color: rgba(107, 67, 119, 0.75);
+}
+
+.form-card {
+  border-radius: 10px; 
+}

@@ -1,0 +1,13 @@
+.top-nav {
+    background: rgb(28, 28, 28);
+}
+
+.nav-title {
+    color: white;
+}
+
+.nav-icon {
+    padding: 6px;
+    background-color: white;
+    border-radius: 8px;
+}

@@ -44,7 +44,7 @@ export default function RegisterPage(){
 
     return (
         <Container className="mt-4">
-            <Card style={{ width: '32rem' }}>
+            <Card style={{ width: 'auto', minWidth: '16rem' }}>
                 <Card.Header>
                     Create your new account by filling out this form!
                 </Card.Header>
