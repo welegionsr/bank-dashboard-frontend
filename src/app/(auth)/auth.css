@@ -18,8 +18,16 @@ body {
 .form-section {
     height: 100vh;
     background-color: rgba(107, 67, 119, 0.75);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .form-card {
   border-radius: 10px; 
+}
+
+.form {
+    width: auto;
+    min-width: 16rem;
+    box-shadow: 0px 3px 8px;
 }

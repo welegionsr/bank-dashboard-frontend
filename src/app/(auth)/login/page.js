@@ -1,5 +1,6 @@
 'use client';
 
+import '@/app/(auth)/auth.css';
 import { Button, Card, Container, Form } from "react-bootstrap";
 import apiClient from "@utils/api";
 import { useState } from "react";
@@ -44,7 +45,7 @@ export default function LoginPage() {
 
     return (
         <Container className="mt-4">
-            <Card style={{ width: 'auto', minWidth: '16rem' }}>
+            <Card className="form">
                 <Card.Header>
                     Sign in to your account!
                 </Card.Header>

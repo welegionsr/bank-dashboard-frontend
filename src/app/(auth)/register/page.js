@@ -1,5 +1,6 @@
 'use client';
 
+import '@/app/(auth)/auth.css';
 import { useState } from "react";
 import { Button, Card, Form, Container } from "react-bootstrap";
 import { useAuth } from "../layout";
@@ -44,7 +45,7 @@ export default function RegisterPage(){
 
     return (
         <Container className="mt-4">
-            <Card style={{ width: 'auto', minWidth: '16rem' }}>
+            <Card className='form'>
                 <Card.Header>
                     Create your new account by filling out this form!
                 </Card.Header>
