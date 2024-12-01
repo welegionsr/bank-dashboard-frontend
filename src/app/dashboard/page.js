@@ -55,13 +55,6 @@ export default function DashboardPage() {
     }, []);
 
 
-    const handleLogout = () => {
-        document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-        userContext.setUser(null);
-        router.push('/login');
-    };
-
-
     return (
         <Container>
             <Card style={{ width: '32rem' }}>
@@ -87,7 +80,7 @@ export default function DashboardPage() {
                 <Card.Body>
                     <Button variant="primary">Transfer Money</Button>
                     <Button variant="secondary">Add Money</Button>
-                    <Button variant="secondary" onClick={handleLogout}>Log out</Button>
+                    <Button variant="secondary" onClick={userContext.handleLogout}>Log out</Button>
                 </Card.Body>
             </Card>
         </Container>

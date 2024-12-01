@@ -1,4 +1,5 @@
 .dashboard-layout {
+  padding: 2rem;
   height: 100vh;  /* Makes sure the main container fills the viewport */
   justify-content: center;
   align-items: center;
@@ -6,5 +7,6 @@
   background-size: cover;
   background-position: center; 
   background-repeat: no-repeat; 
-  background-attachment: fixed; 
+  background-attachment: fixed;
+  overflow-y: hidden;
 }
