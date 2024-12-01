@@ -1,0 +1,10 @@
+.dashboard-layout {
+  height: 100vh;  /* Makes sure the main container fills the viewport */
+  justify-content: center;
+  align-items: center;
+  background-image: url('/images/dash-background.webp');
+  background-size: cover;
+  background-position: center; 
+  background-repeat: no-repeat; 
+  background-attachment: fixed; 
+}

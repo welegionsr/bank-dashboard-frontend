@@ -3,7 +3,6 @@
 import '@/app/(auth)/auth.css';
 
 import apiClient from "@/utils/api";
-import TopNav from "@components/TopNav";
 import { useRouter } from "next/navigation";
 import { parseCookies } from "nookies";
 import { createContext, useContext, useEffect, useState } from "react";
@@ -57,9 +56,10 @@ export default function DashboardLayout({ children }) {
         if(justRegistered)
         {
             setMessageType('success');
-            setMessage('Thank you for registering! Please login using the credentials you provided.');
+            setMessage('Thank you for registering! Please verify your account.');
         }
     }, [justRegistered]);
+
 
     if (loading) {
         // show a loading indicator while checking the token
@@ -72,7 +72,6 @@ export default function DashboardLayout({ children }) {
 
     return (
         <AuthContext.Provider value={{ message, setMessage, messageType, setMessageType, setJustRegistered }}>
-            <TopNav />
             <Container fluid className="auth-layout">
                 <Row>
                     <Col xs={0} md={7} xl={8}>
