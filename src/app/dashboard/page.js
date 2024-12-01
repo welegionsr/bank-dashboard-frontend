@@ -11,47 +11,44 @@ import { Button, Card, Container, ListGroup, Spinner } from "react-bootstrap";
 export default function DashboardPage() {
     const router = useRouter();
     const { token } = parseCookies();
-    const {user, setUser} = useUser();
+    const userContext = useUser();
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchUserDetails = async () => {
-            if (!token) 
-            {
+            if (!token) {
                 console.log("NO TOKEN!");
                 router.push('/login');
                 return;
             }
 
             // Prevent fetching if user is already loaded
-            if (user) return;
+            if (userContext.user) return;
 
-            try 
-            {
-                const response = await apiClient.get(`/users/me`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
 
-                if (response.data && response.data.user) {
-                    console.log("User details:", response.data.user);
-                    setUser(response.data.user);
-                } else {
-                    // If user data is invalid or missing
-                    console.error("Invalid user data");
+            apiClient.get(`/users/me`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+                .then(response => {
+                    if (response.data && response.data.user) {
+                        userContext.setUser(response.data.user);
+                    } else {
+                        // If user data is invalid or missing
+                        console.error("Invalid user data");
+                        handleLogout();
+                    }
+                })
+                .catch(err => {
+                    console.error("Error fetching user details:", err);
                     handleLogout();
-                }
-            } 
-            catch (error) 
-            {
-                console.error("Error fetching user details:", error);
-                handleLogout();
-            }
-            finally 
-            {
-                setLoading(false);  // Set loading to false after the request
-            }
+                })
+                .finally(() => {
+                    setLoading(false);  // Set loading to false after the request
+                })
+
+
         };
 
         fetchUserDetails();
@@ -60,7 +57,7 @@ export default function DashboardPage() {
 
     const handleLogout = () => {
         document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-        setUser(null);
+        userContext.setUser(null);
         router.push('/login');
     };
 
@@ -78,12 +75,12 @@ export default function DashboardPage() {
                 </Card.Body>
                 <ListGroup className="list-group-flush">
                     {loading && <Spinner animation="grow" />}
-                    {user && (
+                    {userContext.user && (
                         <>
-                            <ListGroup.Item>Name: {user.name}</ListGroup.Item>
-                            <ListGroup.Item>Email: {user.email}</ListGroup.Item>
-                            <ListGroup.Item>Phone: {user.phone}</ListGroup.Item>
-                            <ListGroup.Item>Balance: {user.balance}</ListGroup.Item>
+                            <ListGroup.Item>Name: {userContext.user.name}</ListGroup.Item>
+                            <ListGroup.Item>Email: {userContext.user.email}</ListGroup.Item>
+                            <ListGroup.Item>Phone: {userContext.user.phone}</ListGroup.Item>
+                            <ListGroup.Item>Balance: {userContext.user.balance}</ListGroup.Item>
                         </>
                     )}
                 </ListGroup>
@@ -93,8 +90,6 @@ export default function DashboardPage() {
                     <Button variant="secondary" onClick={handleLogout}>Log out</Button>
                 </Card.Body>
             </Card>
-            
-            {token ? <p>Your token: {token}</p> : <p>Loading token...</p>}
         </Container>
     );
 }

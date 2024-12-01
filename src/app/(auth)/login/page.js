@@ -7,6 +7,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { setCookie } from "nookies";
 import { useAuth } from "../layout";
+import { Envelope, Key, PersonPlusFill, PersonVcardFill } from 'react-bootstrap-icons';
+import { useUser } from '@/utils/UserContext';
 
 export default function LoginPage() {
     const router = useRouter();
@@ -14,6 +16,7 @@ export default function LoginPage() {
     const [password, setPassword] = useState('');
     const { setMessage, setMessageType } = useAuth();
     const [submitted, setSubmitted] = useState(false);
+    const userContext = useUser();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -36,10 +39,28 @@ export default function LoginPage() {
             router.push('/dashboard');
         }
         catch (err) {
-            console.error('Login error:', err.response?.data?.message || 'Login failed');
-            setMessageType('warning');
-            setMessage('Invalid email or password!');
-            setSubmitted(false);
+            if(err.status === 403)
+            {
+                // handle case when the account exists but isn't verified yet
+                // redirect to the verify page
+                userContext.setUser({email});
+                router.push('/verify');
+            }
+            else if(err.status === 400)
+            {
+                console.error('Login error:', err.response?.data?.message || 'Login failed');
+                setMessageType('warning');
+                setMessage('Invalid email or password!');
+                setSubmitted(false);
+            }
+            else
+            {
+                // Unexpected error
+                console.error('Login error:', err.response?.data?.message || 'Login failed');
+                setMessageType('danger');
+                setMessage('Unexpected server error/response');
+                setSubmitted(false);
+            }
         }
     };
 
@@ -47,12 +68,13 @@ export default function LoginPage() {
         <Container className="mt-4">
             <Card className="form">
                 <Card.Header>
+                    <PersonVcardFill size="22" color="black"/> {' '}
                     Sign in to your account!
                 </Card.Header>
                 <Card.Body>
                     <Form onSubmit={handleSubmit}>
                         <Form.Group className="mb-3" controlId="formEmail">
-                            <Form.Label>Email address</Form.Label>
+                            <Form.Label><Envelope size="18"/> {' '} Email address</Form.Label>
                             <Form.Control type="email" placeholder="..." value={email} onChange={(e) => setEmail(e.target.value)} required />
                             <Form.Text className="text-muted">
                                 The email address you used to sign up.
@@ -60,7 +82,7 @@ export default function LoginPage() {
                         </Form.Group>
 
                         <Form.Group className="mb-3" controlId="formPassword">
-                            <Form.Label>Password</Form.Label>
+                            <Form.Label><Key size="18"/>{' '} Password</Form.Label>
                             <Form.Control type="password" placeholder="..." value={password} onChange={(e) => setPassword(e.target.value)} required />
                         </Form.Group>
 
@@ -70,8 +92,14 @@ export default function LoginPage() {
                     </Form>
                 </Card.Body>
                 <Card.Footer>
+                    <PersonPlusFill size="22" color="black" style={{marginRight: "4px"}} /> {' '}
                     Don't have an account? {' '}
-                    <Card.Link style={{cursor: "pointer"}} onClick={()=> {router.push("/register")}}>Register!</Card.Link>
+                    <Card.Link 
+                        style={{cursor: "pointer", textDecoration: "none"}} 
+                        onClick={()=> {router.push("/register")}}
+                    >
+                        Register!
+                    </Card.Link>
                 </Card.Footer>
             </Card>
         </Container>

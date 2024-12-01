@@ -1,18 +1,17 @@
 body {
   margin: 0;
   padding: 0;
-  height: 100vh; 
-  background-image: url('/images/auth-background.webp');
-  background-size: cover;
-  background-position: center; 
-  background-repeat: no-repeat; 
-  background-attachment: fixed; 
 }
 
 .auth-layout {
   height: 100vh;  /* Makes sure the main container fills the viewport */
   justify-content: center;
   align-items: center;
+  background-image: url('/images/auth-background.webp');
+  background-size: cover;
+  background-position: center; 
+  background-repeat: no-repeat; 
+  background-attachment: fixed; 
 }
 
 .form-section {
