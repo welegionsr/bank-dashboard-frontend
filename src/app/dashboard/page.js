@@ -80,7 +80,6 @@ export default function DashboardPage() {
                 <Card.Body>
                     <Button variant="primary">Transfer Money</Button>
                     <Button variant="secondary">Add Money</Button>
-                    <Button variant="secondary" onClick={userContext.handleLogout}>Log out</Button>
                 </Card.Body>
             </Card>
         </Container>
