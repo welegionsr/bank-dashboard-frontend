@@ -1,5 +1,6 @@
 'use client';
 
+import UserCard from "@/components/UserCard";
 import apiClient from "@/utils/api";
 import { useUser } from "@/utils/UserContext";
 import { useRouter } from "next/navigation";
@@ -12,7 +13,6 @@ export default function DashboardPage() {
     const router = useRouter();
     const { token } = parseCookies();
     const userContext = useUser();
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchUserDetails = async () => {
@@ -23,7 +23,7 @@ export default function DashboardPage() {
             }
 
             // Prevent fetching if user is already loaded
-            if (userContext.user) return;
+            if (userContext.valid) return;
 
 
             apiClient.get(`/users/me`, {
@@ -34,6 +34,7 @@ export default function DashboardPage() {
                 .then(response => {
                     if (response.data && response.data.user) {
                         userContext.setUser(response.data.user);
+                        userContext.setValid(true);
                     } else {
                         // If user data is invalid or missing
                         console.error("Invalid user data");
@@ -44,10 +45,6 @@ export default function DashboardPage() {
                     console.error("Error fetching user details:", err);
                     handleLogout();
                 })
-                .finally(() => {
-                    setLoading(false);  // Set loading to false after the request
-                })
-
 
         };
 
@@ -57,32 +54,7 @@ export default function DashboardPage() {
 
     return (
         <Container>
-            <Card style={{ width: '32rem' }}>
-                <Card.Header>Welcome!</Card.Header>
-                <Card.Body>
-                    <Card.Text>
-                        This is your dashboard page, where you can see your balance,
-                        transfer money to other users, and add money to your account.
-                        Enjoy!
-                    </Card.Text>
-                </Card.Body>
-                <ListGroup className="list-group-flush">
-                    {loading && <Spinner animation="grow" />}
-                    {userContext.user && (
-                        <>
-                            <ListGroup.Item>Name: {userContext.user.name}</ListGroup.Item>
-                            <ListGroup.Item>Email: {userContext.user.email}</ListGroup.Item>
-                            <ListGroup.Item>Phone: {userContext.user.phone}</ListGroup.Item>
-                            <ListGroup.Item>Balance: {userContext.user.balance}</ListGroup.Item>
-                        </>
-                    )}
-                </ListGroup>
-                <Card.Body>
-                    <Button variant="primary">Transfer Money</Button>
-                    <Button variant="secondary">Add Money</Button>
-                    <Button variant="secondary" onClick={userContext.handleLogout}>Log out</Button>
-                </Card.Body>
-            </Card>
+            <UserCard />
         </Container>
     );
 }
