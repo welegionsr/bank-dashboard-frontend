@@ -32,7 +32,7 @@ export default function UserCard()
                         <ListGroup.Item>Name: {userContext.user.name}</ListGroup.Item>
                         <ListGroup.Item>Email: {userContext.user.email}</ListGroup.Item>
                         <ListGroup.Item>Phone: {userContext.user.phone}</ListGroup.Item>
-                        <ListGroup.Item>Balance: {userContext.user.balance}</ListGroup.Item>
+                        <ListGroup.Item>Balance: ${userContext.user.balance}</ListGroup.Item>
                     </>
                 )}
             </ListGroup>
