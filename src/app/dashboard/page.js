@@ -1,5 +1,6 @@
 'use client';
 
+import SendMoneyPopup from "@/components/SendMoneyPopup";
 import UserCard from "@/components/UserCard";
 import apiClient from "@/utils/api";
 import { useUser } from "@/utils/UserContext";
@@ -13,6 +14,7 @@ export default function DashboardPage() {
     const router = useRouter();
     const { token } = parseCookies();
     const userContext = useUser();
+    const [showSendMoneyModal, setShowSendMoneyModal] = useState(false);
 
     useEffect(() => {
         const fetchUserDetails = async () => {
@@ -43,7 +45,7 @@ export default function DashboardPage() {
                 })
                 .catch(err => {
                     console.error("Error fetching user details:", err);
-                    handleLogout();
+                    userContext.handleLogout();
                 })
 
         };
@@ -54,7 +56,10 @@ export default function DashboardPage() {
 
     return (
         <Container>
+            <SendMoneyPopup show={showSendMoneyModal} onHide={() => setShowSendMoneyModal(false)}/>
             <UserCard />
+
+            <Button onClick={() => setShowSendMoneyModal(true)}>Send Money!</Button>
         </Container>
     );
 }
