@@ -2,61 +2,131 @@
 
 import apiClient from "@/utils/api";
 import { useUser } from "@/utils/UserContext";
-import { Alert, Button, Form, Modal } from "react-bootstrap";
+import { parseCookies } from "nookies";
+import { useState } from "react";
+import { Alert, Badge, Button, Form, Modal } from "react-bootstrap";
 import { Send, XCircle } from "react-bootstrap-icons";
 
-export default function SendMoneyPopup({show, onHide})
-{   
+export default function SendMoneyPopup({ show, onHide }) {
     const userContext = useUser();
+    const { token } = parseCookies();
+    const [recipientEmail, setRecipientEmail] = useState('');
+    const [amount, setAmount] = useState(0);
+    const [submitted, setSubmitted] = useState(false);
+    const [success, setSuccess] = useState(false);
+    const [error, setError] = useState('');
 
-    const handleSubmit = async () => {
-        apiClient.post().then().catch();
+    const handleHide = () => {
+        onHide();
+        setTimeout(() => {
+            setSuccess(false);
+            setAmount(0);
+            setRecipientEmail('');
+            setSubmitted(false);
+            setError('');
+        }, 1000);
     };
 
-    if(!userContext.valid)
-    {
+    const handleSubmit = async () => {
+
+        if (userContext.user.email === recipientEmail) {
+            setError("It's not allowed to set yourself as the recipient");
+            return;
+        }
+
+        if (amount <= 0) {
+            setError("Amount must be a positive value");
+            return;
+        }
+
+        if (amount > userContext.user.balance) {
+            setError("You don't have enough in your balance to complete this transaction");
+            return;
+        }
+
+
+        setSubmitted(true);
+
+        apiClient.post(`/transactions`, { sender: userContext.user.email, receiver: recipientEmail, amount }, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+            .then(_response => {
+                setError('');
+                setSuccess(true);
+                userContext.user.balance -= amount;
+            })
+            .catch(err => {
+                console.log("error sending transaction: ", err);
+                // TODO add different handling according to type of error
+                setSuccess(false);
+                setSubmitted(false);
+            });
+    };
+
+    if (!userContext.valid) {
         return <p> user details missing </p>
     }
 
     return (
-        <Modal show={show} onHide={onHide} backdrop="static">
+        <Modal show={show} onHide={handleHide} backdrop="static">
             <Modal.Header closeButton>
                 <Modal.Title>Send money!</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <Form>
-                    <Form.Group className="mb-3" controlId="sendForm.receiverEmail">
-                        <Form.Label>Who's the recipient?</Form.Label>
-                        <Form.Control
-                            type="email"
-                            placeholder="name@example.com"
-                            autoFocus
-                        />
-                    </Form.Group>
-                    <Form.Group
-                        className="mb-3"
-                        controlId="sendForm.amount"
-                    >
-                        <Form.Label>How much?</Form.Label>
-                        <Form.Control
-                            type="number"
-                            placeholder="..."
-                        />
-                        {userContext.valid && (<Alert className="mt-3" variant="info">
-                            Maximum amount you can send: <strong>${userContext.user.balance}</strong>
-                        </Alert>)}
-                    </Form.Group>
-                </Form>
+                {!success &&
+                    <Form>
+                        <Form.Group className="mb-3" controlId="sendForm.receiverEmail">
+                            <Form.Label>Who's the recipient?</Form.Label>
+                            <Form.Control
+                                type="email"
+                                placeholder="name@example.com"
+                                autoFocus
+                                value={recipientEmail}
+                                disabled={submitted}
+                                onChange={(e) => setRecipientEmail(e.target.value)}
+                                required
+                            />
+                        </Form.Group>
+                        <Form.Group
+                            className="mb-3"
+                            controlId="sendForm.amount"
+                        >
+                            <Form.Label>How much?</Form.Label>
+                            <Form.Control
+                                type="number"
+                                placeholder="..."
+                                value={amount}
+                                disabled={submitted}
+                                onChange={(e) => setAmount(e.target.value)}
+                                required
+                            />
+                            {userContext.valid && (<span>
+                                <Badge bg="warning" text="dark"><strong>Maximum amount you can send: ${userContext.user.balance}</strong></Badge>
+                            </span>)}
+                        </Form.Group>
+                    </Form>
+                }
+                {success &&
+                    <h2>Money sent successfully! yay.</h2>
+                }
+
+                {error &&
+                    <Alert variant="danger">{error}</Alert>
+                }
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={onHide}>
+                <Button variant={success ? "primary" : "secondary"} onClick={handleHide} disabled={!success && submitted}>
                     <XCircle size="22" color="white" /> {' '}
-                    Cancel
+                    {success ? "Close" : "Cancel"}
                 </Button>
-                <Button variant="primary" onClick={handleSubmit}>
-                    <Send size="22" color="white" /> {' '}
-                    Confirm Transaction
-                </Button>
+                {!success &&
+                    <Button variant="primary" onClick={handleSubmit} disabled={submitted}>
+                        <Send size="22" color="white" /> {' '}
+                        {submitted ? "Sending..." : "Confirm Transaction"}
+                    </Button>
+                }
             </Modal.Footer>
         </Modal>
     );

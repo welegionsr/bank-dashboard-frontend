@@ -7,7 +7,7 @@ import { useUser } from "@/utils/UserContext";
 import { useRouter } from "next/navigation";
 import { parseCookies } from "nookies";
 import { useEffect, useState } from "react";
-import { Button, Card, Container, ListGroup, Spinner } from "react-bootstrap";
+import { Button, Card, Col, Container, ListGroup, Row, Spinner } from "react-bootstrap";
 
 
 export default function DashboardPage() {
@@ -56,10 +56,18 @@ export default function DashboardPage() {
 
     return (
         <Container>
-            <SendMoneyPopup show={showSendMoneyModal} onHide={() => setShowSendMoneyModal(false)}/>
-            <UserCard />
+            <Row >
+                <Col className="d-flex justify-content-md-center align-items-center">
+                    <UserCard />
+                </Col>
+            </Row>
+            <Row className="mt-2">
+                <Col className="d-flex justify-content-md-center align-items-center">
+                    <Button onClick={() => setShowSendMoneyModal(true)}>Send Money!</Button>
+                </Col>
+            </Row>
 
-            <Button onClick={() => setShowSendMoneyModal(true)}>Send Money!</Button>
+            <SendMoneyPopup show={showSendMoneyModal} onHide={() => setShowSendMoneyModal(false)}/>
         </Container>
     );
 }
