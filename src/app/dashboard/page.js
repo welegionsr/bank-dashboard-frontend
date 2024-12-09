@@ -1,24 +1,24 @@
 'use client';
 
+import SendMoneyPopup from "@/components/SendMoneyPopup";
 import UserCard from "@/components/UserCard";
 import apiClient from "@/utils/api";
 import { useUser } from "@/utils/UserContext";
-import { useRouter } from "next/navigation";
 import { parseCookies } from "nookies";
 import { useEffect, useState } from "react";
-import { Button, Card, Container, ListGroup, Spinner } from "react-bootstrap";
+import { Button, Col, Container, Row } from "react-bootstrap";
 
 
 export default function DashboardPage() {
-    const router = useRouter();
     const { token } = parseCookies();
     const userContext = useUser();
+    const [showSendMoneyModal, setShowSendMoneyModal] = useState(false);
 
     useEffect(() => {
         const fetchUserDetails = async () => {
             if (!token) {
                 console.log("NO TOKEN!");
-                router.push('/login');
+                userContext.handleLogout();
                 return;
             }
 
@@ -43,7 +43,7 @@ export default function DashboardPage() {
                 })
                 .catch(err => {
                     console.error("Error fetching user details:", err);
-                    handleLogout();
+                    userContext.handleLogout();
                 })
 
         };
@@ -54,7 +54,18 @@ export default function DashboardPage() {
 
     return (
         <Container>
-            <UserCard />
+            <Row >
+                <Col className="d-flex justify-content-md-center align-items-center">
+                    <UserCard />
+                </Col>
+            </Row>
+            <Row className="mt-2">
+                <Col className="d-flex justify-content-md-center align-items-center">
+                    <Button onClick={() => setShowSendMoneyModal(true)}>Send Money!</Button>
+                </Col>
+            </Row>
+
+            <SendMoneyPopup show={showSendMoneyModal} onHide={() => setShowSendMoneyModal(false)}/>
         </Container>
     );
 }

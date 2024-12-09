@@ -28,9 +28,9 @@ export default function LoginPage() {
 
             // Save the token in a cookie
             setCookie(null, 'token', response.data.token, {
-                maxAge: 30 * 24 * 60 * 60, // 30 days
+                maxAge: 20 * 60 * 60, // 20 minutes
                 path: '/', // Accessible on all pages
-            });
+            }); 
 
             setMessageType('success');
             setMessage('Success! Redirecting to dashboard...');
