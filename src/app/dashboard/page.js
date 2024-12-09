@@ -4,14 +4,12 @@ import SendMoneyPopup from "@/components/SendMoneyPopup";
 import UserCard from "@/components/UserCard";
 import apiClient from "@/utils/api";
 import { useUser } from "@/utils/UserContext";
-import { useRouter } from "next/navigation";
 import { parseCookies } from "nookies";
 import { useEffect, useState } from "react";
-import { Button, Card, Col, Container, ListGroup, Row, Spinner } from "react-bootstrap";
+import { Button, Col, Container, Row } from "react-bootstrap";
 
 
 export default function DashboardPage() {
-    const router = useRouter();
     const { token } = parseCookies();
     const userContext = useUser();
     const [showSendMoneyModal, setShowSendMoneyModal] = useState(false);
@@ -20,7 +18,7 @@ export default function DashboardPage() {
         const fetchUserDetails = async () => {
             if (!token) {
                 console.log("NO TOKEN!");
-                router.push('/login');
+                userContext.handleLogout();
                 return;
             }
 
