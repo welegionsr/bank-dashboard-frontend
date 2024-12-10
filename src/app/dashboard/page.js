@@ -1,12 +1,13 @@
 'use client';
 
 import SendMoneyPopup from "@/components/SendMoneyPopup";
+import TransactionCard from "@/components/TransactionCard";
 import UserCard from "@/components/UserCard";
 import apiClient from "@/utils/api";
 import { useUser } from "@/utils/UserContext";
 import { parseCookies } from "nookies";
 import { useEffect, useState } from "react";
-import { Button, Col, Container, Row } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 
 
 export default function DashboardPage() {
@@ -61,8 +62,9 @@ export default function DashboardPage() {
             </Row>
             <Row>
                 <Col className="d-flex justify-content-md-center align-items-center">
-                    <div style={{ width: '36rem', height: '23rem', backgroundColor: '#F8F8F8', marginTop: '-14px', borderRadius: '12px', boxShadow: 'inset 0 2px 4px 0px rgb(0, 0, 0, 0.20)'}}>
-                        
+                    <div style={{ width: '36rem', height: '23rem', backgroundColor: '#F8F8F8', paddingTop: '14px', marginTop: '-14px', borderRadius: '12px', boxShadow: 'inset 0 2px 4px 0px rgb(0, 0, 0, 0.20)'}}>
+                        <TransactionCard name="Fred" date="05/12/2024 - 18:32" amount="500" isInbound={true} />
+                        <TransactionCard name="Moshe" date="05/12/2024 - 18:32" amount="250" isInbound={false} />
                     </div>
                 </Col>
             </Row>

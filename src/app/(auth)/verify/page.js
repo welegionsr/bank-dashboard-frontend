@@ -55,7 +55,7 @@ export default function VerifyPage() {
                             <Form.Label><EnvelopePaper size="18" /> {' '} Enter the passcode</Form.Label>
                             <Form.Control type="text" placeholder="..." value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} required />
                             <Form.Text className="text-muted">
-                                It's the 6-digit code that was sent to you by email.
+                                It&apos;s the 6-digit code that was sent to you by email.
                             </Form.Text>
                         </Form.Group>
 
@@ -66,7 +66,7 @@ export default function VerifyPage() {
                 </Card.Body>
                 <Card.Footer>
                     <EnvelopeX size="22" color="black" style={{ marginRight: "4px" }} /> {' '}
-                    Didn't get an email? {' '}
+                    Didn&apos;t get an email? {' '}
                     <Card.Link
                         style={{ cursor: "pointer", textDecoration: "none" }}
                         onClick={() => { /* HANDLE RE-SEND OF EMAIL */ }}

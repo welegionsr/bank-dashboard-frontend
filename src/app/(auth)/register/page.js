@@ -71,7 +71,7 @@ export default function RegisterPage() {
                         </Form.Group>
 
                         <Form.Group className="mb-3" controlId="formName">
-                            <Form.Label><PersonVcard size="18" />{' '}What's your name?</Form.Label>
+                            <Form.Label><PersonVcard size="18" />{' '}What&apos;s your name?</Form.Label>
                             <Form.Control type="text" placeholder="..." value={name} onChange={(e) => setName(e.target.value)} required />
                             <Form.Text className="text-muted">
                                 First and last name
