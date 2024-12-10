@@ -1,41 +1,42 @@
 'use client';
 
+import '@/styles/UserCard.css';
+import { roboto } from '@/utils/fonts';
 import { useUser } from "@/utils/UserContext";
-import { Card, ListGroup, Spinner } from "react-bootstrap";
-import { PersonBadge } from "react-bootstrap-icons";
+import Image from "next/image";
+import { Button, Card, Col, Container, Row, Spinner } from "react-bootstrap";
 
-export default function UserCard()
-{
+export default function UserCard({ onPrimaryClick, primaryText }) {
     const userContext = useUser();
 
-    if (!userContext.valid)
-    {
+    if (!userContext.valid) {
         return <Spinner animation="grow" variant="light" role="status" />
     }
 
     return (
-        <Card style={{ width: '32rem' }}>
-            <Card.Header>
-                <PersonBadge size="18"/> {' '}
-                Welcome, { userContext.valid ? userContext.user.name : "" }!
-            </Card.Header>
+        <Card className='user-card'>
             <Card.Body>
-                <Card.Text>
-                    This is your dashboard page, where you can see your balance,
-                    transfer money to other users, and add money to your account.
-                    Enjoy!
-                </Card.Text>
+                <Container fluid>
+                    <Row>
+                        <Col xs="6">
+                            <Row>
+                                <h2 className='card-title'>Hello, {userContext.user.name}!</h2>
+                                <p style={{ fontSize: '0.7rem', fontWeight: '600', marginTop: '0.6rem', marginBottom: '0.5rem' }}>Current balance</p>
+                                <span className="balance" style={{ fontSize: '2.6rem' }}>$ {userContext.user.balance}</span>
+                            </Row>
+                            <Row className='mt-4'>
+                                <Col>
+                                    <Button variant='primary' onClick={onPrimaryClick}>{primaryText}</Button>
+                                </Col>
+                            </Row>
+                        </Col>
+                        <Col xs="6" className='safe-back'/>
+                    </Row>
+
+                </Container>
             </Card.Body>
-            <ListGroup className="list-group-flush">
-                {userContext.valid && (
-                    <>
-                        <ListGroup.Item>Name: {userContext.user.name}</ListGroup.Item>
-                        <ListGroup.Item>Email: {userContext.user.email}</ListGroup.Item>
-                        <ListGroup.Item>Phone: {userContext.user.phone}</ListGroup.Item>
-                        <ListGroup.Item>Balance: ${userContext.user.balance}</ListGroup.Item>
-                    </>
-                )}
-            </ListGroup>
+
+
         </Card>
     );
 }

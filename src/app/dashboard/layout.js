@@ -7,7 +7,7 @@ export default function DashboardLayout({ children }) {
     return (
         <>
             <Container fluid className="dashboard-layout">
-                <Row>
+                <Row className="mt-4">
                     {children}
                 </Row>
             </Container>

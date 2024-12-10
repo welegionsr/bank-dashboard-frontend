@@ -1,11 +1,12 @@
 'use client';
 
-import { Jockey_One } from 'next/font/google'
+import { Jockey_One } from 'next/font/google';
 import '@/styles/TopNav.css';
 import { useUser } from '@/utils/UserContext';
 import { useEffect, useState } from 'react';
 import { Button, Container, Navbar } from "react-bootstrap";
 import { BoxArrowRight } from 'react-bootstrap-icons';
+import Image from 'next/image';
 
 const jockeyOne = Jockey_One({subsets: ['latin'], weight: '400'});
 
