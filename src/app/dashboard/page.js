@@ -56,12 +56,14 @@ export default function DashboardPage() {
         <Container>
             <Row >
                 <Col className="d-flex justify-content-md-center align-items-center">
-                    <UserCard />
+                    <UserCard onPrimaryClick={() => setShowSendMoneyModal(true)} primaryText="Send Money!" />
                 </Col>
             </Row>
-            <Row className="mt-2">
+            <Row>
                 <Col className="d-flex justify-content-md-center align-items-center">
-                    <Button onClick={() => setShowSendMoneyModal(true)}>Send Money!</Button>
+                    <div style={{ width: '36rem', height: '23rem', backgroundColor: '#F8F8F8', marginTop: '-14px', borderRadius: '12px', boxShadow: 'inset 0 2px 4px 0px rgb(0, 0, 0, 0.20)'}}>
+                        
+                    </div>
                 </Col>
             </Row>
 
