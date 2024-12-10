@@ -1,15 +1,16 @@
 'use client';
 
+import '@/styles/TransactionCard.css';
 import Image from "next/image";
 import { Col, Container, Row } from "react-bootstrap";
 
 export default function TransactionCard({name, date, amount, isInbound}){
     return (
-        <Container fluid>
+        <Container className={`${isInbound ? 'inbound' : 'outbound'} p-3`} fluid>
             <Row>
-                <Col xs={2}>
+                <Col xs={2} className="d-flex justify-content-md-center align-items-center" style={{borderRight: '1px solid #aaa'}}>
                     <Image
-                        src={`/images/${ isInbound ? 'dollar-up.svg' : 'dollar-down.svg'}`}
+                        src={`${ isInbound ? 'dollar-up.svg' : 'dollar-down.svg'}`}
                         alt={`${isInbound ? 'inbound' : 'outbound'} transaction icon`}
                         width={50}
                         height={50}
@@ -17,16 +18,16 @@ export default function TransactionCard({name, date, amount, isInbound}){
                 </Col>
                 <Col xs={6}>
                     <Row>
-                        <Col xs={3}>
-                            <span>from</span>
+                        <Col className="d-flex justify-content-md-center align-items-center" xs={3}>
+                            <span className="property-title">From</span>
                         </Col>
                         <Col>
                             <span>{name}</span>
                         </Col>
                     </Row>
                     <Row>
-                        <Col xs={3}>
-                            <span>date</span>
+                        <Col className="d-flex justify-content-md-center align-items-center" xs={3}>
+                            <span className="property-title">Date</span>
                         </Col>
                         <Col>
                             <span>{date}</span>
@@ -36,12 +37,12 @@ export default function TransactionCard({name, date, amount, isInbound}){
                 <Col xs={4}>
                     <Row>
                         <Col xs={3}>
-                            <span>amount</span>
+                            <span className="property-title">Amount</span>
                         </Col>
                     </Row>
                     <Row>
                         <Col>
-                            <span>${amount}</span>
+                            <span className='amount'>${amount}</span>
                         </Col>
                     </Row>
                 </Col>
