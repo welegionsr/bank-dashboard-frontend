@@ -93,7 +93,7 @@ export default function LoginPage() {
                 </Card.Body>
                 <Card.Footer>
                     <PersonPlusFill size="22" color="black" style={{marginRight: "4px"}} /> {' '}
-                    Don't have an account? {' '}
+                    Don&apos;t have an account? {' '}
                     <Card.Link 
                         style={{cursor: "pointer", textDecoration: "none"}} 
                         onClick={()=> {router.push("/register")}}

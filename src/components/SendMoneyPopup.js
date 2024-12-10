@@ -78,7 +78,7 @@ export default function SendMoneyPopup({ show, onHide }) {
                 {!success &&
                     <Form>
                         <Form.Group className="mb-3" controlId="sendForm.receiverEmail">
-                            <Form.Label>Who's the recipient?</Form.Label>
+                            <Form.Label>Who&apos;s the recipient?</Form.Label>
                             <Form.Control
                                 type="email"
                                 placeholder="name@example.com"
