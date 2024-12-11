@@ -3,7 +3,7 @@
 import '@/styles/TransactionList.css';
 import TransactionCard from "./TransactionCard";
 import { ExclamationOctagon } from 'react-bootstrap-icons';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Col, Container, Row, Spinner } from 'react-bootstrap';
 import { useQuery } from '@tanstack/react-query';
 import { fetchTransactions } from '@/app/api/transactionsApi';
 import { parseCookies } from 'nookies';
@@ -27,7 +27,7 @@ export default function TransactionList({userEmail}){
 
     if(isLoading)
     {
-        return <p>Loading...</p>
+        return <Spinner size='48' color='grey'/>
     }
 
     if(error)

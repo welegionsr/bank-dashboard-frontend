@@ -2,6 +2,7 @@
 
 import apiClient from "@/utils/api";
 import { useUser } from "@/utils/UserContext";
+import { useQueryClient } from "@tanstack/react-query";
 import { parseCookies } from "nookies";
 import { useState } from "react";
 import { Alert, Badge, Button, Form, Modal } from "react-bootstrap";
@@ -15,6 +16,7 @@ export default function SendMoneyPopup({ show, onHide }) {
     const [submitted, setSubmitted] = useState(false);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState('');
+    const queryClient = useQueryClient();
 
     const handleHide = () => {
         onHide();
@@ -56,6 +58,9 @@ export default function SendMoneyPopup({ show, onHide }) {
                 setError('');
                 setSuccess(true);
                 userContext.user.balance -= amount;
+                
+                // invalidate the cache to make it reload transactions data
+                queryClient.invalidateQueries(['transactions', userContext.user.email]);
             })
             .catch(err => {
                 console.log("error sending transaction: ", err);

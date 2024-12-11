@@ -1,5 +1,6 @@
 'use client';
 
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useState, useEffect } from "react";
 
@@ -8,6 +9,7 @@ const userContext = createContext();
 export const UserProvider = ({ children }) => {
     const router = useRouter();
     const [valid, setValid] = useState(false);
+    const queryClient = useQueryClient(); // Access the QueryClient
 
     // Initialize user from sessionStorage
     const [user, setUser] = useState(() => {
@@ -32,6 +34,7 @@ export const UserProvider = ({ children }) => {
         setUser(null);
         setValid(false);
         sessionStorage.removeItem('user'); // Clean user from sessionStorage
+        queryClient.clear();
         router.push('/login');
     };
 
