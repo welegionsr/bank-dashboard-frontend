@@ -1,12 +1,10 @@
 'use client';
 
 import '@/styles/UserCard.css';
-import { roboto } from '@/utils/fonts';
 import { useUser } from "@/utils/UserContext";
-import Image from "next/image";
 import { Button, Card, Col, Container, Row, Spinner } from "react-bootstrap";
 
-export default function UserCard({ onPrimaryClick, primaryText }) {
+export default function UserCard({ onPrimaryClick, primaryText, onSecondaryClick, secondaryText }) {
     const userContext = useUser();
 
     if (!userContext.valid) {
@@ -27,6 +25,9 @@ export default function UserCard({ onPrimaryClick, primaryText }) {
                             <Row className='mt-4'>
                                 <Col>
                                     <Button variant='primary' onClick={onPrimaryClick}>{primaryText}</Button>
+                                </Col>
+                                <Col>
+                                    <Button variant='secondary' onClick={onSecondaryClick} aria-controls='transactions-collapse'>{secondaryText}</Button>
                                 </Col>
                             </Row>
                         </Col>

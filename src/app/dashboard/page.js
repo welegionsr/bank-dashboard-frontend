@@ -2,18 +2,20 @@
 
 import SendMoneyPopup from "@/components/SendMoneyPopup";
 import TransactionCard from "@/components/TransactionCard";
+import TransactionList from "@/components/TransactionList";
 import UserCard from "@/components/UserCard";
 import apiClient from "@/utils/api";
 import { useUser } from "@/utils/UserContext";
 import { parseCookies } from "nookies";
 import { useEffect, useState } from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { Col, Collapse, Container, Row } from "react-bootstrap";
 
 
 export default function DashboardPage() {
     const { token } = parseCookies();
     const userContext = useUser();
     const [showSendMoneyModal, setShowSendMoneyModal] = useState(false);
+    const [openTransactions, setOpenTransactions] = useState(false);
 
     useEffect(() => {
         const fetchUserDetails = async () => {
@@ -50,22 +52,29 @@ export default function DashboardPage() {
         };
 
         fetchUserDetails();
-    }, []);
+    });
 
+    const userEmail = userContext.user?.email;
 
     return (
         <Container>
             <Row >
                 <Col className="d-flex justify-content-md-center align-items-center">
-                    <UserCard onPrimaryClick={() => setShowSendMoneyModal(true)} primaryText="Send Money!" />
+                    <UserCard 
+                        onPrimaryClick={() => setShowSendMoneyModal(true)} 
+                        onSecondaryClick={() => setOpenTransactions(!openTransactions)} 
+                        primaryText="Send Money!"
+                        secondaryText={`${openTransactions ? 'Hide' : 'Show'} History`}
+                    />
                 </Col>
             </Row>
             <Row>
                 <Col className="d-flex justify-content-md-center align-items-center">
-                    <div style={{ width: '36rem', height: '23rem', backgroundColor: '#F8F8F8', paddingTop: '14px', marginTop: '-14px', borderRadius: '12px', boxShadow: 'inset 0 2px 4px 0px rgb(0, 0, 0, 0.20)'}}>
-                        <TransactionCard name="Fred" date="05/12/2024 - 18:32" amount="500" isInbound={true} />
-                        <TransactionCard name="Moshe" date="05/12/2024 - 18:32" amount="250" isInbound={false} />
-                    </div>
+                    <Collapse in={openTransactions}>
+                        <div id="transactions-collapse">
+                            <TransactionList userEmail={userEmail} />
+                        </div>
+                    </Collapse>
                 </Col>
             </Row>
 

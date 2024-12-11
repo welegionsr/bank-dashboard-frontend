@@ -19,7 +19,7 @@ export default function TransactionCard({name, date, amount, isInbound}){
                 <Col xs={6}>
                     <Row>
                         <Col className="d-flex justify-content-md-center align-items-center" xs={3}>
-                            <span className="property-title">From</span>
+                            <span className="property-title">{isInbound ? 'From' : 'To'}</span>
                         </Col>
                         <Col>
                             <span>{name}</span>
