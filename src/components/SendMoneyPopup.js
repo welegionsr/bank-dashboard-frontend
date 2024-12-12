@@ -6,7 +6,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { parseCookies } from "nookies";
 import { useState } from "react";
 import { Alert, Badge, Button, Form, Modal } from "react-bootstrap";
-import { Send, XCircle } from "react-bootstrap-icons";
+import { CheckCircle, Send, XCircle } from "react-bootstrap-icons";
+import TransactionSuccess from "./TransactionSuccess";
 
 export default function SendMoneyPopup({ show, onHide }) {
     const userContext = useUser();
@@ -17,6 +18,7 @@ export default function SendMoneyPopup({ show, onHide }) {
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState('');
     const queryClient = useQueryClient();
+    const [transaction, setTransaction] = useState("");
 
     const handleHide = () => {
         onHide();
@@ -54,13 +56,13 @@ export default function SendMoneyPopup({ show, onHide }) {
                 Authorization: `Bearer ${token}`,
             },
         })
-            .then(_response => {
+            .then(response => {
                 setError('');
-                setSuccess(true);
+                setTransaction(response.data.transaction);
                 userContext.user.balance -= amount;
-                
                 // invalidate the cache to make it reload transactions data
                 queryClient.invalidateQueries(['transactions', userContext.user.email]);
+                setSuccess(true);
             })
             .catch(err => {
                 console.log("error sending transaction: ", err);
@@ -77,7 +79,7 @@ export default function SendMoneyPopup({ show, onHide }) {
     return (
         <Modal show={show} onHide={handleHide} backdrop="static">
             <Modal.Header closeButton>
-                <Modal.Title>Send money!</Modal.Title>
+                <Modal.Title>{success ? "" : "Send money!"}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 {!success &&
@@ -114,7 +116,7 @@ export default function SendMoneyPopup({ show, onHide }) {
                     </Form>
                 }
                 {success &&
-                    <h2>Money sent successfully! yay.</h2>
+                    <TransactionSuccess transaction={transaction}/>
                 }
 
                 {error &&
@@ -123,8 +125,8 @@ export default function SendMoneyPopup({ show, onHide }) {
             </Modal.Body>
             <Modal.Footer>
                 <Button variant={success ? "primary" : "secondary"} onClick={handleHide} disabled={!success && submitted}>
-                    <XCircle size="22" color="white" /> {' '}
-                    {success ? "Close" : "Cancel"}
+                    {success ? <CheckCircle size="22" color="white" /> : <XCircle size="22" color="white" /> } {' '}
+                    {success ? "Done" : "Cancel"}
                 </Button>
                 {!success &&
                     <Button variant="primary" onClick={handleSubmit} disabled={submitted}>
