@@ -8,6 +8,7 @@ import { useState } from "react";
 import { Alert, Badge, Button, Form, Modal } from "react-bootstrap";
 import { CheckCircle, Send, XCircle } from "react-bootstrap-icons";
 import TransactionSuccess from "./TransactionSuccess";
+import ContactRow from "./contacts/ContactRow";
 
 export default function SendMoneyPopup({ show, onHide }) {
     const userContext = useUser();
@@ -29,6 +30,10 @@ export default function SendMoneyPopup({ show, onHide }) {
             setSubmitted(false);
             setError('');
         }, 1000);
+    };
+
+    const handleContactChoice = (email) => {
+        setRecipientEmail(email);
     };
 
     const handleSubmit = async () => {
@@ -98,8 +103,12 @@ export default function SendMoneyPopup({ show, onHide }) {
                                 required
                             />
                         </Form.Group>
+
+                        <small style={{fontSize: '0.7rem', letterSpacing: '-0.3px'}}>Saved contacts:</small>
+                        <ContactRow userEmail={userContext.user.email} onContactChoice={handleContactChoice}/>
+
                         <Form.Group
-                            className="mb-3"
+                            className="mb-3 mt-3"
                             controlId="sendForm.amount"
                         >
                             <Form.Label>How much?</Form.Label>
