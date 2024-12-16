@@ -20,7 +20,7 @@ export default function UserCard({ onPrimaryClick, primaryText, onSecondaryClick
                             <Row>
                                 <h2 className='card-title'>Hello, {userContext.user.name}!</h2>
                                 <p style={{ fontSize: '0.7rem', fontWeight: '600', marginTop: '0.6rem', marginBottom: '0.5rem' }}>Current balance</p>
-                                <span className="balance" style={{ fontSize: '2.6rem' }}>$ {userContext.user.balance}</span>
+                                <span className="balance" style={{ fontSize: '2.6rem' }}>$ {userContext.user.balance / 100}</span>
                             </Row>
                             <Row className='mt-4'>
                                 <Col>

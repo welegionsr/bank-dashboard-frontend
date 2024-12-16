@@ -16,7 +16,7 @@ export default function TransactionList({userEmail}){
     const { data: transactions, isLoading, error } = useQuery({
         queryKey: ['transactions', userEmail],
         queryFn: () => userEmail ? fetchTransactions(userEmail, token) : Promise.reject('User email is null'),
-        enabled: !!userEmail, // Only run query if userEmail is truthy
+        enabled: !!userEmail && !!token, // Only run query if userEmail is truthy
         staleTime: 5 * 60 * 1000, // Optional: Cache duration
     });
 
@@ -53,12 +53,12 @@ export default function TransactionList({userEmail}){
             )
             }
 
-            {transactions?.length && transactions.map((transaction, index) => (
+            {transactions?.length > 0 && transactions.map((transaction, index) => (
                 <TransactionCard
                     key={index}
                     name={(userEmail === transaction.receiver.email) ? transaction.sender.name : transaction.receiver.name}
                     date={formatDateTime(transaction.date)}
-                    amount={transaction.amount}
+                    amount={transaction.amount / 100}
                     isInbound={userEmail === transaction.receiver.email}
                 />
             ))}
