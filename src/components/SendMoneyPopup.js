@@ -43,7 +43,9 @@ export default function SendMoneyPopup({ show, onHide }) {
             return;
         }
 
-        if (amount > userContext.user.balance) {
+        const amountInCents = amount * 100;
+
+        if (amountInCents > userContext.user.balance) {
             setError("You don't have enough in your balance to complete this transaction");
             return;
         }
@@ -51,7 +53,7 @@ export default function SendMoneyPopup({ show, onHide }) {
 
         setSubmitted(true);
 
-        apiClient.post(`/transactions`, { sender: userContext.user.email, receiver: recipientEmail, amount }, {
+        apiClient.post(`/transactions`, { sender: userContext.user.email, receiver: recipientEmail, amount: amountInCents }, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -59,7 +61,7 @@ export default function SendMoneyPopup({ show, onHide }) {
             .then(response => {
                 setError('');
                 setTransaction(response.data.transaction);
-                userContext.user.balance -= amount;
+                userContext.user.balance -= amountInCents;
                 // invalidate the cache to make it reload transactions data
                 queryClient.invalidateQueries(['transactions', userContext.user.email]);
                 setSuccess(true);
@@ -110,7 +112,7 @@ export default function SendMoneyPopup({ show, onHide }) {
                                 required
                             />
                             {userContext.valid && (<span>
-                                <Badge bg="warning" text="dark"><strong>Maximum amount you can send: ${userContext.user.balance}</strong></Badge>
+                                <Badge bg="warning" text="dark"><strong>Maximum amount you can send: ${userContext.user.balance / 100}</strong></Badge>
                             </span>)}
                         </Form.Group>
                     </Form>

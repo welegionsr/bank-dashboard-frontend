@@ -7,5 +7,6 @@ export const fetchTransactions = async (email, token) => {
             Authorization: `Bearer ${token}`,
         }
     });
+    
     return response.data.transactions; // Return only the transactions array
 };
