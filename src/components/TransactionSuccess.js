@@ -3,6 +3,7 @@
 import apiClient from "@/utils/api";
 import { parseCookies } from "nookies";
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Container, Button, Row } from "react-bootstrap";
 import { PersonAdd, PersonCheck, SendCheckFill } from "react-bootstrap-icons";
 
@@ -11,6 +12,7 @@ export default function TransactionSuccess({ transaction }) {
     const [success, setSuccess] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     const [message, setMessage] = useState("Save to Contacts");
+    const queryClient = useQueryClient();
 
     const handleSaveContact = async () => {
 
@@ -23,6 +25,7 @@ export default function TransactionSuccess({ transaction }) {
         })
         .then(_response => {
             setMessage("Saved!");
+            queryClient.invalidateQueries('contacts');
             setSuccess(true);
         })
         .catch(err => {
