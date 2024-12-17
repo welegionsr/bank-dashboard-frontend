@@ -23,7 +23,7 @@ export const UserProvider = ({ children }) => {
     // Update sessionStorage whenever user changes
     useEffect(() => {
         if (user) {
-            sessionStorage.setItem('user', JSON.stringify({ email: user.email, isVerified: user.isVerified }));
+            sessionStorage.setItem('user', JSON.stringify({ id: user._id, email: user.email, isVerified: user.isVerified }));
         } else {
             sessionStorage.removeItem('user');
         }
