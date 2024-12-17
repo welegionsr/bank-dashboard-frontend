@@ -21,7 +21,14 @@ export default function TopNav() {
         <Navbar className="top-nav" sticky="top">
             <Container>
                 <Navbar.Brand>
-                    <span className={`nav-title ${jockeyOne.className}`}>GoldFront Bank</span>
+                    <Image
+                        src='/images/logo-nav.webp'
+                        alt='GoldFront Bank logo'
+                        width={34}
+                        height={34}
+                        style={{verticalAlign: 'middle', borderRadius: '10px'}}
+                    /> {' '}
+                    <span className={`nav-title ${jockeyOne.className}`} style={{ verticalAlign: 'middle' }} >GoldFront Bank</span>
                 </Navbar.Brand>
 
                 {isLoggedIn && userContext.user &&

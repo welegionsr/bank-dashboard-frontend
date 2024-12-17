@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Container, Button, Row } from "react-bootstrap";
 import { PersonAdd, PersonCheck, SendCheckFill } from "react-bootstrap-icons";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 export default function TransactionSuccess({ transaction }) {
     const { token } = parseCookies();
@@ -46,9 +47,12 @@ export default function TransactionSuccess({ transaction }) {
     return (
         <Container style={{ textAlign: "center" }}>
             <Row className="mt-2">
-                <SendCheckFill size={48} />
+                <DotLottieReact
+                    src="animations/transfer-done.json"
+                    autoplay
+                />
             </Row>
-            <Row className="mt-4 mb-4">
+            <Row className="mb-4">
                 <h2 className="mt-2">Money sent successfully!</h2>
                 <p><strong>Transaction ID:</strong> {transaction._id}</p>
                 <p><strong>Recipient:</strong> {transaction.receiver.name}</p>

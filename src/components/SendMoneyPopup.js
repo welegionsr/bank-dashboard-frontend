@@ -9,6 +9,7 @@ import { Alert, Badge, Button, Form, Modal } from "react-bootstrap";
 import { CheckCircle, Send, XCircle } from "react-bootstrap-icons";
 import TransactionSuccess from "./TransactionSuccess";
 import ContactRow from "./contacts/ContactRow";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 export default function SendMoneyPopup({ show, onHide }) {
     const userContext = useUser();
@@ -86,45 +87,52 @@ export default function SendMoneyPopup({ show, onHide }) {
     return (
         <Modal show={show} onHide={handleHide} backdrop="static">
             <Modal.Header closeButton>
-                <Modal.Title>{success ? "" : "Send money!"}</Modal.Title>
+                {/* <Modal.Title>{success ? "" : "Send money!"}</Modal.Title> */}
             </Modal.Header>
             <Modal.Body>
                 {!success &&
-                    <Form>
-                        <Form.Group className="mb-3" controlId="sendForm.receiverEmail">
-                            <Form.Label>Who&apos;s the recipient?</Form.Label>
-                            <Form.Control
-                                type="email"
-                                placeholder="name@example.com"
-                                autoFocus
-                                value={recipientEmail}
-                                disabled={submitted}
-                                onChange={(e) => setRecipientEmail(e.target.value)}
-                                required
-                            />
-                        </Form.Group>
+                    <>
+                        <DotLottieReact
+                            src="animations/transfer-tree.lottie"
+                            autoplay
+                            loop
+                        />
+                        <Form>
+                            <Form.Group className="mb-3" controlId="sendForm.receiverEmail">
+                                <Form.Label>Who&apos;s the recipient?</Form.Label>
+                                <Form.Control
+                                    type="email"
+                                    placeholder="name@example.com"
+                                    autoFocus
+                                    value={recipientEmail}
+                                    disabled={submitted}
+                                    onChange={(e) => setRecipientEmail(e.target.value)}
+                                    required
+                                />
+                            </Form.Group>
 
-                        <small style={{fontSize: '0.7rem', letterSpacing: '-0.3px'}}>Saved contacts:</small>
-                        <ContactRow userId={userContext.user._id} onContactChoice={handleContactChoice}/>
+                            <small style={{fontSize: '0.7rem', letterSpacing: '-0.3px'}}>Saved contacts:</small>
+                            <ContactRow userId={userContext.user._id} onContactChoice={handleContactChoice}/>
 
-                        <Form.Group
-                            className="mb-3 mt-3"
-                            controlId="sendForm.amount"
-                        >
-                            <Form.Label>How much?</Form.Label>
-                            <Form.Control
-                                type="number"
-                                placeholder="..."
-                                value={amount}
-                                disabled={submitted}
-                                onChange={(e) => setAmount(e.target.value)}
-                                required
-                            />
-                            {userContext.valid && (<span>
-                                <Badge bg="warning" text="dark"><strong>Maximum amount you can send: ${userContext.user.balance / 100}</strong></Badge>
-                            </span>)}
-                        </Form.Group>
-                    </Form>
+                            <Form.Group
+                                className="mb-3 mt-3"
+                                controlId="sendForm.amount"
+                            >
+                                <Form.Label>How much?</Form.Label>
+                                <Form.Control
+                                    type="number"
+                                    placeholder="..."
+                                    value={amount}
+                                    disabled={submitted}
+                                    onChange={(e) => setAmount(e.target.value)}
+                                    required
+                                />
+                                {userContext.valid && (<span>
+                                    <Badge bg="warning" text="dark"><strong>Maximum amount you can send: ${userContext.user.balance / 100}</strong></Badge>
+                                </span>)}
+                            </Form.Group>
+                        </Form>
+                    </>
                 }
                 {success &&
                     <TransactionSuccess transaction={transaction}/>

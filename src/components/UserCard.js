@@ -2,6 +2,7 @@
 
 import '@/styles/UserCard.css';
 import { useUser } from "@/utils/UserContext";
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { Button, Card, Col, Container, Row, Spinner, Stack } from "react-bootstrap";
 import { Clipboard2Data, SendPlusFill } from 'react-bootstrap-icons';
 
@@ -46,7 +47,13 @@ export default function UserCard({ onPrimaryClick, primaryText, onSecondaryClick
                                 </Stack>
                             </Row>
                         </Col>
-                        <Col xs="5" className='safe-back'/>
+                        <Col xs="5" className='safe-back'>
+                            {/* <DotLottieReact
+                                src="animations/money-rain.lottie"
+                                autoplay
+                                loop
+                            /> */}
+                        </Col>
                     </Row>
                 </Container>
             </Card.Body>
