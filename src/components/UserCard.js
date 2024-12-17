@@ -2,7 +2,8 @@
 
 import '@/styles/UserCard.css';
 import { useUser } from "@/utils/UserContext";
-import { Button, Card, Col, Container, Row, Spinner } from "react-bootstrap";
+import { Button, Card, Col, Container, Row, Spinner, Stack } from "react-bootstrap";
+import { Clipboard2Data, SendPlusFill } from 'react-bootstrap-icons';
 
 export default function UserCard({ onPrimaryClick, primaryText, onSecondaryClick, secondaryText }) {
     const userContext = useUser();
@@ -16,22 +17,35 @@ export default function UserCard({ onPrimaryClick, primaryText, onSecondaryClick
             <Card.Body>
                 <Container fluid>
                     <Row>
-                        <Col xs="6">
+                        <Col xs="7">
                             <Row>
                                 <h2 className='card-title'>Hello, {userContext.user.name}!</h2>
                                 <p style={{ fontSize: '0.7rem', fontWeight: '600', marginTop: '0.6rem', marginBottom: '0.5rem' }}>Current balance</p>
                                 <span className="balance" style={{ fontSize: '2.6rem' }}>$ {userContext.user.balance / 100}</span>
                             </Row>
                             <Row className='mt-4'>
-                                <Col xs={6}>
-                                    <Button variant='primary' style={{letterSpacing: '-0.3px' }} onClick={onPrimaryClick}>{primaryText}</Button>
-                                </Col>
-                                <Col xs={6}>
-                                    <Button variant='secondary' style={{ letterSpacing: '-0.3px' }} onClick={onSecondaryClick} aria-controls='transactions-collapse'>{secondaryText}</Button>
-                                </Col>
+                                <Stack direction='horizontal' gap={2}>
+                                    <Button 
+                                        variant='primary' 
+                                        className='menu-btn send-btn' 
+                                        onClick={onPrimaryClick}
+                                    >
+                                        <SendPlusFill size={24} color="white" />{' '}
+                                        <span style={{ verticalAlign: 'middle' }}>{primaryText}</span>
+                                    </Button>
+                                    <Button
+                                        variant='secondary'
+                                        className='menu-btn history-btn'
+                                        onClick={onSecondaryClick}
+                                        aria-controls='transactions-collapse'
+                                    >
+                                        <Clipboard2Data size={24} color="white" />{' '}
+                                        <span style={{verticalAlign: 'middle'}}>{secondaryText}</span>
+                                    </Button>
+                                </Stack>
                             </Row>
                         </Col>
-                        <Col xs="6" className='safe-back'/>
+                        <Col xs="5" className='safe-back'/>
                     </Row>
                 </Container>
             </Card.Body>
