@@ -27,7 +27,7 @@ export default function RegisterPage() {
         setSubmitted(true);
 
         try {
-            const response = await apiClient.post('/auth/register', { email, password, phone, name, balance });
+            const response = await apiClient.post('/auth/register', { email, password, phone, name, balance: balance * 100 });
 
             //save incomplete user object to context, to be used temporarily in verification page
             const userForVerification = {email, name, phone};

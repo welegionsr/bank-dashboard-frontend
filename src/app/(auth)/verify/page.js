@@ -7,6 +7,7 @@ import { EnvelopePaper, EnvelopeX, KeyFill } from "react-bootstrap-icons";
 import { useAuth } from "../layout";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/utils/UserContext";
+import VerifyField from "@/components/form/VerifyField";
 
 
 export default function VerifyPage() {
@@ -101,7 +102,10 @@ export default function VerifyPage() {
                     <Form onSubmit={handleSubmit}>
                         <Form.Group className="mb-3" controlId="formPasscode">
                             <Form.Label><EnvelopePaper size="18" /> {' '} Enter the passcode</Form.Label>
-                            <Form.Control type="text" placeholder="..." value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} required />
+                            <VerifyField
+                                length={6} // 6-digit code
+                                onChange={(value) => setVerificationCode(value)}
+                            />
                             <Form.Text className="text-muted">
                                 It&apos;s the 6-digit code that was sent to you by email.
                             </Form.Text>
