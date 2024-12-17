@@ -105,7 +105,7 @@ export default function SendMoneyPopup({ show, onHide }) {
                         </Form.Group>
 
                         <small style={{fontSize: '0.7rem', letterSpacing: '-0.3px'}}>Saved contacts:</small>
-                        <ContactRow userEmail={userContext.user.email} onContactChoice={handleContactChoice}/>
+                        <ContactRow userId={userContext.user._id} onContactChoice={handleContactChoice}/>
 
                         <Form.Group
                             className="mb-3 mt-3"
