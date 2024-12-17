@@ -23,17 +23,16 @@ export default function UserCard({ onPrimaryClick, primaryText, onSecondaryClick
                                 <span className="balance" style={{ fontSize: '2.6rem' }}>$ {userContext.user.balance / 100}</span>
                             </Row>
                             <Row className='mt-4'>
-                                <Col>
-                                    <Button variant='primary' onClick={onPrimaryClick}>{primaryText}</Button>
+                                <Col xs={6}>
+                                    <Button variant='primary' style={{letterSpacing: '-0.3px' }} onClick={onPrimaryClick}>{primaryText}</Button>
                                 </Col>
-                                <Col>
-                                    <Button variant='secondary' onClick={onSecondaryClick} aria-controls='transactions-collapse'>{secondaryText}</Button>
+                                <Col xs={6}>
+                                    <Button variant='secondary' style={{ letterSpacing: '-0.3px' }} onClick={onSecondaryClick} aria-controls='transactions-collapse'>{secondaryText}</Button>
                                 </Col>
                             </Row>
                         </Col>
                         <Col xs="6" className='safe-back'/>
                     </Row>
-
                 </Container>
             </Card.Body>
 

@@ -27,7 +27,7 @@ export default function TopNav() {
                 {isLoggedIn && userContext.user &&
                     (
                         <Navbar.Text style={{ color: "white" }}>
-                        <Button className="btn-logout" variant='secondary' onClick={userContext.handleLogout} ><BoxArrowRight size="16" color='white' /> Sign out</Button>
+                        <Button className="btn-logout" variant='dark' onClick={userContext.handleLogout} ><BoxArrowRight size="16" color='white' /> Sign out</Button>
                         </Navbar.Text>
                     )
                 }
