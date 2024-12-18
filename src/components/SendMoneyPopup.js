@@ -81,7 +81,7 @@ export default function SendMoneyPopup({ show, onHide }) {
     };
 
     if (!userContext.valid) {
-        return <p> user details missing </p>
+        return;
     }
 
     return (
