@@ -22,7 +22,7 @@ export default function TransactionCard({name, date, amount, isInbound}){
                             <span className="property-title">{isInbound ? 'From' : 'To'}</span>
                         </Col>
                         <Col>
-                            <span>{name}</span>
+                            <span className='property-value'>{name}</span>
                         </Col>
                     </Row>
                     <Row>
@@ -30,7 +30,7 @@ export default function TransactionCard({name, date, amount, isInbound}){
                             <span className="property-title">Date</span>
                         </Col>
                         <Col>
-                            <span>{date}</span>
+                            <span className='property-value'>{date}</span>
                         </Col>
                     </Row>
                 </Col>
