@@ -2,7 +2,6 @@
 
 import '@/styles/UserCard.css';
 import { useUser } from "@/utils/UserContext";
-import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { Button, Card, Col, Container, Row, Spinner, Stack } from "react-bootstrap";
 import { Clipboard2Data, SendPlusFill } from 'react-bootstrap-icons';
 
@@ -21,7 +20,7 @@ export default function UserCard({ onPrimaryClick, primaryText, onSecondaryClick
                         <Col xs="7">
                             <Row>
                                 <h2 className='card-title'>Hello, {userContext.user.name}!</h2>
-                                <p style={{ fontSize: '0.7rem', fontWeight: '600', marginTop: '0.6rem', marginBottom: '0.1rem' }}>Current balance</p>
+                                <p style={{ fontSize: '0.65rem', fontWeight: '500', marginTop: '0.6rem', marginBottom: '0.1rem' }}>Current balance</p>
                                 <span className="balance">$ {userContext.user.balance / 100}</span>
                             </Row>
                             <hr style={{marginTop: '0', marginRight: '1.15rem', color: 'grey'}}/>
