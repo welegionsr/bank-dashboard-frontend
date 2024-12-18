@@ -14,3 +14,12 @@
 .btn-logout {
     font-size: 0.9rem;
 }
+
+.logo {
+    letter-spacing: 0px;
+    transition: letter-spacing .5s;
+}
+
+.logo:hover {
+    letter-spacing: 0.8px;
+}

@@ -20,7 +20,7 @@ export default function TopNav() {
     return (
         <Navbar className="top-nav" sticky="top">
             <Container>
-                <Navbar.Brand>
+                <Navbar.Brand href='/dashboard' className='logo'>
                     <Image
                         src='/images/logo-nav.webp'
                         alt='GoldFront Bank logo'

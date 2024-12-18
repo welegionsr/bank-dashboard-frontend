@@ -1,10 +1,10 @@
 'use client';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
 import TopNav from '@/components/TopNav';
 import { roboto } from '@/utils/fonts';
 import { UserProvider } from '@/utils/UserContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from 'react';
 
 
