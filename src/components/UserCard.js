@@ -47,13 +47,7 @@ export default function UserCard({ onPrimaryClick, primaryText, onSecondaryClick
                                 </Stack>
                             </Row>
                         </Col>
-                        <Col xs="5" className='safe-back'>
-                            {/* <DotLottieReact
-                                src="animations/money-rain.lottie"
-                                autoplay
-                                loop
-                            /> */}
-                        </Col>
+                        <Col xs="5" className='safe-back'/>
                     </Row>
                 </Container>
             </Card.Body>
