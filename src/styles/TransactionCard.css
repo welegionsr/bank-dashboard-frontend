@@ -6,10 +6,12 @@
 
 .inbound {
     background: rgba(148, 228, 148, 0.3);
+    border-top: 1px dashed #8080802e;
 }
 
 .outbound {
     background: rgba(240, 148, 120, 0.3);
+    border-top: 1px dashed #8080802e;
 }
 
 .amount {

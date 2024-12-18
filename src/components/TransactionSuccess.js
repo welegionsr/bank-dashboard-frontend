@@ -5,7 +5,7 @@ import { parseCookies } from "nookies";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Container, Button, Row } from "react-bootstrap";
-import { PersonAdd, PersonCheck, SendCheckFill } from "react-bootstrap-icons";
+import { PersonAdd, PersonCheck } from "react-bootstrap-icons";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 export default function TransactionSuccess({ transaction }) {
