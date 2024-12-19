@@ -48,7 +48,7 @@ This project is the frontend for a mock banking application, developed to practi
    Create a `.env.local` file in the root directory and add the following:
 
    ```env
-   NEXT_PUBLIC_API_URL=<backend_url>
+   NEXT_PUBLIC_BANK_API_BASE_URL=<backend_url>/api
    ```
 
 4. **Run the application**:
