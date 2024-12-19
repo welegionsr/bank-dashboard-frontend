@@ -82,5 +82,3 @@ This frontend depends on the [Bank Dashboard Backend](https://github.com/welegio
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-# bank-dashboard-frontend
-Frontend of the bank project
