@@ -34,3 +34,20 @@ export const deleteContact = async (userId, contactId, token) => {
         throw new Error(`Failed to delete contact: ${error.response?.data?.message || error.message}`);    
     }
 };
+
+export const fetchUsers = async (token) => {
+    try
+    {
+        const response = await apiClient.get('/users', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
+    
+        return response.data; // Return only the users array
+    }
+    catch(error)
+    {
+        throw new Error(`Failed to fetch users: ${error.response?.data?.message || error.message}`);    
+    }
+};
