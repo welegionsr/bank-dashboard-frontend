@@ -41,16 +41,20 @@ export default function UserRow({user}){
     }
 
     return (
-        <Container>
+        <Container className='user-row'>
             <Row className="p-2">
-                <Col xs={5}>
-                    <span className="name">{user.name}</span>
-                    <br/>
-                    <span className="email">{user.email}</span>
-                </Col>
                 <Col xs={4}>
                     <Row>
-                        <Col xs={5}>
+                        <span className="name">{user.name}</span>
+                    </Row>
+                    <Row>
+                        <span className="email">{user.email}</span>
+                    </Row>
+                    
+                </Col>
+                <Col xs={5}>
+                    <Row>
+                        <Col xs={4}>
                             <Badge className='property-badge' bg="secondary">Last online</Badge>
                         </Col>
                         <Col>
@@ -60,7 +64,7 @@ export default function UserRow({user}){
                         </Col>
                     </Row>
                     <Row>
-                        <Col xs={5}>
+                        <Col xs={4}>
                             <Badge className='property-badge' bg="secondary">Transactions</Badge>
                         </Col>
                         <Col>

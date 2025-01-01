@@ -1,5 +1,6 @@
 'use client';
 
+import '@/styles/UserList/UserList.css';
 import { Col, Container, Row, Spinner } from "react-bootstrap";
 import { ExclamationOctagon } from "react-bootstrap-icons";
 import UserRow from "./UserRow";

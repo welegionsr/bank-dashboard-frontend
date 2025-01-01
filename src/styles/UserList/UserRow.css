@@ -1,3 +1,13 @@
+.user-row {
+    border-top: 1px dashed rgba(219, 219, 219);
+    padding: 16px 8px;
+    transition: background-color 0.2s;
+}
+
+.user-row:hover {
+    background-color: #F9F9F9;
+}
+
 .name {
     font-size: 1rem;
     font-weight: 500;
