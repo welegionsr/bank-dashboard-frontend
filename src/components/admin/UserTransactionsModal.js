@@ -19,7 +19,8 @@ export default function UserTransactionsModal({ user, show, onHide }) {
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={onHide}>
-                    <CheckCircle size="22" color="black" /> {" Close"}
+                    <CheckCircle size="22" color="white" /> 
+                    <span style={{verticalAlign: 'middle'}}> {' '} Close</span>
                 </Button>
             </Modal.Footer>
         </Modal>
