@@ -2,6 +2,7 @@
     width: 38rem;
     box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.25);
     border-radius: 0px 0px 12px 12px;
+    border: 1px solid #E3E3E3;
     overflow: clip;
     margin-bottom: 2rem;
 }

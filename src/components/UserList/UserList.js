@@ -42,8 +42,7 @@ export default function UserList() {
                         </Col>
                     </Row>
                 </Container>
-            )
-            }
+            )}
 
             {users?.length > 0 && users.map((user, index) => (
                 <UserRow

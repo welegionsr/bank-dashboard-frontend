@@ -1,0 +1,47 @@
+.user-filter {
+    background: #FCFCFC;
+    width: 38rem;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
+    border-radius: 12px 12px 0 0;
+    border: 1px solid #E3E3E3;
+    padding: 20px;
+    z-index: 10000;
+    transform: translateY(2px);
+}
+
+/* Customize search input style */
+.input-group .form-control {
+    border-radius: 30px; /* Rounded corners */
+    padding-left: 30px; /* Space for the search icon */
+    outline: none;
+    border: none;
+}
+
+.input-group .btn {
+    background-color: #ffffff; /* Customize button color */
+    border: none; /* Remove button border */
+    padding: 0 12px; /* Space around the icon */
+}
+
+.search-input {
+    border: 1px solid #E0E0E0; /* Light gray border */
+    border-radius: 30px; /* Rounded button */
+    overflow: clip;
+}
+
+.input-group .btn:hover {
+    background-color: #0056b3; /* Darken button on hover */
+}
+
+/* Search icon inside the input */
+.input-group-text {
+    background-color: transparent;
+    border: none;
+    position: absolute;
+    left: 10px;
+}
+
+.form-check-label {
+    font-size: 0.8rem;
+    vertical-align: middle;
+}
