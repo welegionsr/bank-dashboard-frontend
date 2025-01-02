@@ -7,9 +7,13 @@ import UserRow from "./UserRow";
 import { fetchUsers } from "@/app/api/usersApi";
 import { parseCookies } from "nookies";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from 'react';
+import UserTransactionsModal from '../admin/UserTransactionsModal';
 
 export default function UserList() {
     const { token } = parseCookies();
+    const [showTransactionModal, setShowTransactionModal] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
 
     const { data: users, isLoading, error } = useQuery({
         queryKey: ['users'],
@@ -48,8 +52,13 @@ export default function UserList() {
                 <UserRow
                     key={index}
                     user={user}
+                    onDelete={() => console.log('Delete user: ', user.name)}
+                    onEdit={() => console.log('Edit user: ', user.name)}
+                    onInfo={() => { setSelectedUser(user); setShowTransactionModal(true); }}
                 />
             ))}
+
+            <UserTransactionsModal user={selectedUser} show={showTransactionModal} onHide={() => setShowTransactionModal(false)} />
         </div>
     );
 }

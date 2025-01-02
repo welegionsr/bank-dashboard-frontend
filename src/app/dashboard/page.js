@@ -1,7 +1,6 @@
 'use client';
 
 import SendMoneyPopup from "@/components/SendMoneyPopup";
-import TransactionCard from "@/components/TransactionCard";
 import TransactionList from "@/components/TransactionList";
 import UserCard from "@/components/UserCard";
 import apiClient from "@/utils/api";

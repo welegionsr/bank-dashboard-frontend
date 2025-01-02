@@ -1,5 +1,5 @@
 .transaction-list {
-    width: 38rem; 
+    width: 38rem;
     height: auto; 
     max-height: 40vh;
     background-color: #F8F8F8; 
@@ -9,4 +9,13 @@
     box-shadow: inset 0 2px 4px 0px rgb(0, 0, 0, 0.20);
     overflow-y: auto;
     overflow-x: hidden;
+}
+
+/* Override when inside Modal */
+.TransactionList.modal-content {
+    width: 100%;
+    max-width: 100%;
+    /* Modal should take full width */
+    min-width: unset;
+    /* Disable min-width in modal context */
 }

@@ -7,7 +7,7 @@ import { ArrowDown, ArrowUp } from 'react-bootstrap-icons';
 import { formatDistanceToNow } from "date-fns";
 import { useEffect, useState } from 'react';
 
-export default function UserRow({user}){
+export default function UserRow({user, onDelete, onEdit, onInfo}){
     const [lastOnlineRelative, setLastOnlineRelative] = useState('');
 
     useEffect(() => {
@@ -27,18 +27,6 @@ export default function UserRow({user}){
         return () => clearInterval(interval);
 
     }, [user.lastOnline]);
-
-    const handleDelete = () => {
-        console.log('Delete', user.name);
-    }
-
-    const handleEdit = () => {
-        console.log('Edit', user.name);
-    }
-
-    const handleInfo = () => {
-        console.log('Info', user.name);
-    }
 
     return (
         <Container className='user-row'>
@@ -83,9 +71,9 @@ export default function UserRow({user}){
                 </Col>
                 <Col xs={3} className="ms-auto">
                     <UserRowActions
-                        onEdit={handleEdit}
-                        onDelete={handleDelete}
-                        onInfo={handleInfo}
+                        onEdit={onEdit}
+                        onDelete={onDelete}
+                        onInfo={onInfo}
                     />
                 </Col>
             </Row>
