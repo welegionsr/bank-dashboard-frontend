@@ -3,6 +3,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useState, useEffect } from "react";
+import { globalLogout } from "./logout";
 
 const userContext = createContext();
 
@@ -30,12 +31,10 @@ export const UserProvider = ({ children }) => {
     }, [user]);
 
     const handleLogout = () => {
-        document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
         setUser(null);
         setValid(false);
-        sessionStorage.removeItem('user'); // Clean user from sessionStorage
         queryClient.clear();
-        router.push('/login');
+        globalLogout();
     };
 
     return (
