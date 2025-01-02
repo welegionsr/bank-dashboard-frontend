@@ -5,7 +5,7 @@
     border-radius: 12px 12px 0 0;
     border: 1px solid #E3E3E3;
     padding: 20px;
-    z-index: 10000;
+    z-index: 100;
     transform: translateY(2px);
 }
 
