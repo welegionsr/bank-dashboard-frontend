@@ -3,9 +3,8 @@
 import SendMoneyPopup from "@/components/SendMoneyPopup";
 import TransactionList from "@/components/TransactionList";
 import UserCard from "@/components/UserCard";
-import apiClient from "@/utils/api";
 import { useUser } from "@/utils/UserContext";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Col, Collapse, Container, Row } from "react-bootstrap";
 
 
@@ -14,44 +13,18 @@ export default function DashboardPage() {
     const [showSendMoneyModal, setShowSendMoneyModal] = useState(false);
     const [openTransactions, setOpenTransactions] = useState(false);
 
-    useEffect(() => {
-        const fetchUserDetails = async () => {
-            // Prevent fetching if user is already loaded
-            if (userContext.valid) return;
-
-            apiClient.get(`/users/me`, {
-                withCredentials: true,
-            })
-                .then(response => {
-                    if (response.data && response.data.user) {
-                        console.log("User data fetched successfully");
-                        userContext.setUser(response.data.user);
-                        userContext.setValid(true);
-                    } else {
-                        // If user data is invalid or missing
-                        console.error("Invalid user data");
-                        userContext.handleLogout();
-                    }
-                })
-                .catch(err => {
-                    console.error("Error fetching user details:", err);
-                    userContext.handleLogout();
-                })
-
-        };
-
-        fetchUserDetails();
-    });
-
-    const userEmail = userContext.user?.email;
+    const userEmail = userContext?.user?.email || "";
 
     return (
         <Container>
             <Row >
                 <Col className="d-flex justify-content-md-center align-items-center">
-                    <UserCard 
-                        onPrimaryClick={() => setShowSendMoneyModal(true)} 
-                        onSecondaryClick={() => setOpenTransactions(!openTransactions)} 
+                    <UserCard
+                        onPrimaryClick={() => {
+                            console.log("Modal open triggered");
+                            setShowSendMoneyModal(true);
+                        }}
+                        onSecondaryClick={() => setOpenTransactions(!openTransactions)}
                         primaryText="Send Money!"
                         secondaryText={`${openTransactions ? 'Hide' : 'Show'} History`}
                     />
@@ -67,7 +40,13 @@ export default function DashboardPage() {
                 </Col>
             </Row>
 
-            <SendMoneyPopup show={showSendMoneyModal} onHide={() => setShowSendMoneyModal(false)}/>
+            <SendMoneyPopup
+                show={showSendMoneyModal}
+                onHide={() => {
+                    console.log("Modal close triggered");
+                    setShowSendMoneyModal(false);
+                }}
+            />
         </Container>
     );
 }

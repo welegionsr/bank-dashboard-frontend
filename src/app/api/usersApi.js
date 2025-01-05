@@ -29,6 +29,14 @@ export const deleteContact = async (userId, contactId) => {
     }
 };
 
+export const fetchCurrentUser = async () => {
+    const response = await apiClient.get(`/users/me`, { withCredentials: true });
+    if (!response.data?.user) {
+        throw new Error("User not authenticated");
+    }
+    return response.data.user;
+};
+
 export const fetchUsers = async () => {
     try
     {

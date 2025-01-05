@@ -1,12 +1,14 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import { Button } from "react-bootstrap";
 
 export default function AdminPage() {
+    const router = useRouter();
     return (
         <div>
             <h1>Admin Page</h1>
-            <Button href="/admin/users" variant="primary">Manage Users</Button>
+            <Button variant="primary" onClick={() => router.push('/admin/users')}>Manage Users</Button>
         </div>
     );
 }

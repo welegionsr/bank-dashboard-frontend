@@ -1,9 +1,9 @@
 'use client';
 
 import '@/app/(auth)/auth.css';
-import { Button, Card, Container, Form, Spinner } from "react-bootstrap";
+import { Button, Card, Container, Form } from "react-bootstrap";
 import apiClient from "@utils/api";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../layout";
 import { Envelope, Key, PersonPlusFill, PersonVcardFill } from 'react-bootstrap-icons';
@@ -15,35 +15,8 @@ export default function LoginPage() {
     const [password, setPassword] = useState('');
     const { setMessage, setMessageType } = useAuth();
     const [submitted, setSubmitted] = useState(false);
-    // const [loading, setLoading] = useState(true);
     const userContext = useUser();
 
-    // useEffect(() => {
-    //     const checkSession = async () => {
-    //         try {
-    //             const response = await apiClient.get('/auth/session');
-    //             if (response.status === 200 && response.data.isValid) 
-    //             {
-    //                 router.replace('/dashboard');
-    //             }
-    //         } catch (error) 
-    //         {
-    //             if(error.status === 401)
-    //             {
-    //                 // means the session is invalid, need to log in again
-    //                 setLoading(false);
-    //             }
-    //             else
-    //             {
-    //                 console.error('Unexpected error:', error.response?.data?.message || 'Unexpected error');
-    //                 setMessageType('danger');
-    //                 setMessage('Unexpected server error/response');
-    //             }
-    //         }
-    //     };
-
-    //     checkSession();
-    // }, [router, setMessage, setMessageType]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -54,7 +27,7 @@ export default function LoginPage() {
             .then(_response => {
                 setMessageType('success');
                 setMessage('Success! Redirecting to dashboard...');
-
+                userContext.refetch();
                 // redirect to the dashboard page
                 router.push('/dashboard');
             })
@@ -81,23 +54,6 @@ export default function LoginPage() {
             });
     };
 
-    // if(loading)
-    // {
-    //     return (
-    //         <Container className="mt-4">
-    //             <Card className="form">
-    //                 <Card.Header>
-    //                     <PersonVcardFill size="22" color="black" /> {' '}
-    //                     Checking your session...
-    //                 </Card.Header>
-    //                 <Card.Body>
-    //                     <Spinner size="48" color="black" animation="grow" />
-    //                     <p>Please wait...</p>
-    //                 </Card.Body>
-    //             </Card>
-    //         </Container>
-    //     );
-    // }
 
     return (
         <Container className="mt-4">

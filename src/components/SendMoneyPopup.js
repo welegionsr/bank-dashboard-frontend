@@ -80,7 +80,7 @@ export default function SendMoneyPopup({ show, onHide }) {
             });
     };
 
-    if (!userContext.valid) {
+    if (!userContext.user) {
         return;
     }
 
@@ -111,8 +111,8 @@ export default function SendMoneyPopup({ show, onHide }) {
                                 />
                             </Form.Group>
 
-                            <small style={{fontSize: '0.7rem', letterSpacing: '-0.3px'}}>Saved contacts:</small>
-                            <ContactRow userId={userContext.user._id} onContactChoice={handleContactChoice}/>
+                            <small style={{ fontSize: '0.7rem', letterSpacing: '-0.3px' }}>Saved contacts:</small>
+                            <ContactRow userId={userContext.user._id} onContactChoice={handleContactChoice} />
 
                             <Form.Group
                                 className="mb-3 mt-3"
@@ -128,14 +128,14 @@ export default function SendMoneyPopup({ show, onHide }) {
                                     required
                                 />
                                 {userContext.valid && (<span>
-                                <Badge className="mt-2" bg="warning" text="dark">Maximum amount you can send: ${userContext.user.balance / 100}</Badge>
+                                    <Badge className="mt-2" bg="warning" text="dark">Maximum amount you can send: ${userContext.user.balance / 100}</Badge>
                                 </span>)}
                             </Form.Group>
                         </Form>
                     </>
                 }
                 {success &&
-                    <TransactionSuccess transaction={transaction}/>
+                    <TransactionSuccess transaction={transaction} />
                 }
 
                 {error &&
@@ -144,7 +144,7 @@ export default function SendMoneyPopup({ show, onHide }) {
             </Modal.Body>
             <Modal.Footer>
                 <Button variant={success ? "primary" : "secondary"} onClick={handleHide} disabled={!success && submitted}>
-                    {success ? <CheckCircle size="22" color="white" /> : <XCircle size="22" color="white" /> } {' '}
+                    {success ? <CheckCircle size="22" color="white" /> : <XCircle size="22" color="white" />} {' '}
                     {success ? "Done" : "Cancel"}
                 </Button>
                 {!success &&
