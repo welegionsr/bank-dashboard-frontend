@@ -5,42 +5,32 @@ import TransactionList from "@/components/TransactionList";
 import UserCard from "@/components/UserCard";
 import apiClient from "@/utils/api";
 import { useUser } from "@/utils/UserContext";
-import { parseCookies } from "nookies";
 import { useEffect, useState } from "react";
 import { Col, Collapse, Container, Row } from "react-bootstrap";
 
 
 export default function DashboardPage() {
-    const { token } = parseCookies();
     const userContext = useUser();
     const [showSendMoneyModal, setShowSendMoneyModal] = useState(false);
     const [openTransactions, setOpenTransactions] = useState(false);
 
     useEffect(() => {
         const fetchUserDetails = async () => {
-            if (!token) {
-                console.log("NO TOKEN!");
-                userContext.handleLogout();
-                return;
-            }
-
             // Prevent fetching if user is already loaded
             if (userContext.valid) return;
 
-
             apiClient.get(`/users/me`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+                withCredentials: true,
             })
                 .then(response => {
                     if (response.data && response.data.user) {
+                        console.log("User data fetched successfully");
                         userContext.setUser(response.data.user);
                         userContext.setValid(true);
                     } else {
                         // If user data is invalid or missing
                         console.error("Invalid user data");
-                        handleLogout();
+                        userContext.handleLogout();
                     }
                 })
                 .catch(err => {
