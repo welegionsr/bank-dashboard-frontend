@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { globalLogout } from "./logout";
 import { fetchCurrentUser } from "@/app/api/usersApi";
 
@@ -21,7 +21,20 @@ export const UserProvider = ({ children }) => {
     });
 
     // values for incomplete user data, used in registration and verification pages
-    const [incompleteUser, setIncompleteUser] = useState(null);
+    // Load initial value from sessionStorage if available
+    const [incompleteUser, setIncompleteUserState] = useState(() => {
+        const savedValue = sessionStorage.getItem('incompleteUser');
+        return savedValue ? JSON.parse(savedValue) : null;
+    });
+
+    const setIncompleteUser = (value) => {
+        setIncompleteUserState(value);
+        if (value === null) {
+            sessionStorage.removeItem('incompleteUser');
+        } else {
+            sessionStorage.setItem('incompleteUser', JSON.stringify(value));
+        }
+    };
 
     const [role, setRole] = useState(null);
 
