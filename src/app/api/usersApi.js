@@ -1,30 +1,24 @@
 import apiClient from "@/utils/api";
 
 
-export const fetchContacts = async (userId, token) => {
-    try
-    {
+export const fetchContacts = async (userId) => {
+    try {
         const response = await apiClient.get(`/users/${userId}/contacts`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            }
+            withCredentials: true,
         });
-    
+
         return response.data.contacts; // Return only the contacts array
     }
-    catch(error)
-    {
-        throw new Error(`Failed to fetch contacts: ${error.response?.data?.message || error.message}`);    
+    catch (error) {
+        throw new Error(`Failed to fetch contacts: ${error.response?.data?.message || error.message}`);
     }
 };
 
-export const deleteContact = async (userId, contactId, token) => {
+export const deleteContact = async (userId, contactId) => {
     try
     {
         const response = await apiClient.delete(`/users/${userId}/contacts/${contactId}`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            }
+            withCredentials: true,
         });
     
         return response.data;
@@ -35,13 +29,19 @@ export const deleteContact = async (userId, contactId, token) => {
     }
 };
 
-export const fetchUsers = async (token) => {
+export const fetchCurrentUser = async () => {
+    const response = await apiClient.get(`/users/me`, { withCredentials: true });
+    if (!response.data?.user) {
+        throw new Error("User not authenticated");
+    }
+    return response.data.user;
+};
+
+export const fetchUsers = async () => {
     try
     {
         const response = await apiClient.get('/users', {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            }
+            withCredentials: true,
         });
     
         return response.data; // Return only the users array

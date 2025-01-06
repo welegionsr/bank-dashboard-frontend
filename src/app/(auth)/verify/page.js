@@ -45,12 +45,15 @@ export default function VerifyPage() {
 
         setSubmitted(true);
 
-        const { email } = userContext.user;
+        console.log("[VerifyPage] UserContext:", userContext);
+
+        const { email } = userContext.incompleteUser;
 
         apiClient.post('/auth/verify', { email, verificationCode })
             .then(_response => {
                 setMessageType('success');
                 setMessage('Account Verified! Redirecting to login...');
+                userContext.setIncompleteUser(null); // Clear the incomplete user data
                 router.push('/login');  // Redirect to the login page
             })
             .catch(err => {

@@ -18,7 +18,7 @@ export default function UserList() {
     const { data: users, isLoading, error } = useQuery({
         queryKey: ['users'],
         queryFn: () => fetchUsers(token),
-        enabled: !!token,
+        enabled: true,
         staleTime: 5 * 60 * 1000,
     });
 

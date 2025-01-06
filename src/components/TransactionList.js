@@ -18,7 +18,7 @@ export default function TransactionList({userEmail}){
     const { data: transactions, isLoading, error } = useQuery({
         queryKey: ['transactions', userEmail],
         queryFn: () => userEmail ? ( userEmail === userContext.user.email ? fetchMyTransactions(token) : fetchUserTransactions(userEmail, token)) : Promise.reject('User email is null'),
-        enabled: !!userEmail && !!token, // Only run query if userEmail is truthy
+        enabled: !!userEmail, // Only run query if userEmail is truthy
         staleTime: 5 * 60 * 1000, // Optional: Cache duration
     });
 

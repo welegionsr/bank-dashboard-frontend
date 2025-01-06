@@ -1,44 +1,69 @@
 'use client';
 
-import { useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import { createContext, useContext, useState, useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { createContext, useContext, useEffect, useState } from "react";
 import { globalLogout } from "./logout";
+import { fetchCurrentUser } from "@/app/api/usersApi";
+
 
 const userContext = createContext();
 
-export const UserProvider = ({ children }) => {
-    const router = useRouter();
-    const [valid, setValid] = useState(false);
+export const UserProvider = ({ children }) => {   
     const queryClient = useQueryClient(); // Access the QueryClient
+ 
+    const [valid, setValid] = useState(false);
 
-    // Initialize user from sessionStorage
-    const [user, setUser] = useState(() => {
-        if (typeof window !== "undefined") {
-            const storedUser = sessionStorage.getItem('user');
-            return storedUser ? JSON.parse(storedUser) : null;
-        }
-        return null;
+    const { data: user, isError, isLoading, refetch } = useQuery({
+        queryKey: ["user"],
+        queryFn: fetchCurrentUser,
+        retry: false,
+        onError: () => handleLogout(), // Logout on error
     });
 
-    // Update sessionStorage whenever user changes
-    useEffect(() => {
-        if (user) {
-            sessionStorage.setItem('user', JSON.stringify({ id: user._id, email: user.email, isVerified: user.isVerified, role: user.role }));
+    // values for incomplete user data, used in registration and verification pages
+    // Load initial value from sessionStorage if available
+    const [incompleteUser, setIncompleteUserState] = useState(() => {
+        const savedValue = sessionStorage.getItem('incompleteUser');
+        return savedValue ? JSON.parse(savedValue) : null;
+    });
+
+    const setIncompleteUser = (value) => {
+        setIncompleteUserState(value);
+        if (value === null) {
+            sessionStorage.removeItem('incompleteUser');
         } else {
-            sessionStorage.removeItem('user');
+            sessionStorage.setItem('incompleteUser', JSON.stringify(value));
         }
-    }, [user]);
+    };
+
+    const [role, setRole] = useState(null);
+
 
     const handleLogout = () => {
-        setUser(null);
-        setValid(false);
+        sessionStorage.removeItem("role");
         queryClient.clear();
         globalLogout();
     };
 
+    const updateUser = (newUser) => {
+        setRole(newUser.role || "guest");
+        setValid(true);
+        sessionStorage.setItem("role", newUser.role || "guest");
+    };
+
     return (
-        <userContext.Provider value={{ user, setUser, handleLogout, valid, setValid }}>
+        <userContext.Provider value={{
+            user,
+            role: user?.role || role,
+            isLoading,
+            isError,
+            valid,
+            incompleteUser,
+            setIncompleteUser,
+            refetch,
+            handleLogout,
+            setUser: updateUser
+        }}>
             {children}
         </userContext.Provider>
     );

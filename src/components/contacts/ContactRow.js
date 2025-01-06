@@ -13,7 +13,7 @@ export default function ContactRow({ userId, onContactChoice })
     const { data: contacts, isLoading, error } = useQuery({
         queryKey: ['contacts', userId],
         queryFn: () => userId ? fetchContacts(userId, token) : Promise.reject('User id is null'),
-        enabled: !!userId && !!token, // Only run query if userId is truthy
+        enabled: !!userId, // Only run query if userId is truthy
         staleTime: 15 * 60 * 1000, // Optional: Cache duration
     });
 
