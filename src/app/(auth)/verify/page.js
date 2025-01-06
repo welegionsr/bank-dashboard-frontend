@@ -8,6 +8,8 @@ import { useAuth } from "../layout";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/utils/UserContext";
 import VerifyField from "@/components/form/VerifyField";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import { destroyCookie } from "nookies";
 
 
 export default function VerifyPage() {
@@ -18,6 +20,11 @@ export default function VerifyPage() {
     const userContext = useUser();
     const { setMessage, setMessageType } = useAuth();
     const router = useRouter();
+
+    // clear the temp cookie that enables access to this page
+    useEffect(() => {
+        destroyCookie(null, 'verify_access');
+    }, []);
 
     // Effect to handle the countdown timer
     useEffect(() => {
@@ -97,9 +104,16 @@ export default function VerifyPage() {
                     <KeyFill size="22" color="black" /> {' '}
                     Verify your account to continue!
                 </Card.Header>
-                <Card.Text className="mt-4" style={{padding: '0 1rem'}}>
-                    An email with a passcode is on its way to your inbox!<br/>
-                </Card.Text>
+                <Card.Body>
+                    <DotLottieReact
+                        src="animations/email-verify.lottie"
+                        autoplay
+                        loop
+                    />
+                    <Card.Text className="mt-4" style={{padding: '0 1rem'}}>
+                        An email with a passcode is on its way to your inbox!<br/>
+                    </Card.Text>
+                </Card.Body>
                 <Alert style={{ margin: '0.2rem 1rem', fontSize: '0.75rem', padding: '8px' }}><strong>Note:</strong> the passcode is valid for the next 10 minutes.</Alert>
                 <Card.Body>
                     <Form onSubmit={handleSubmit}>

@@ -8,6 +8,7 @@ import apiClient from "@/utils/api";
 import { useRouter } from "next/navigation";
 import { Envelope, Key, PersonFillCheck, PersonVcard, PiggyBank, TelephoneInbound } from 'react-bootstrap-icons';
 import { useUser } from '@/utils/UserContext';
+import { setCookie } from 'nookies';
 
 
 export default function RegisterPage() {
@@ -36,6 +37,14 @@ export default function RegisterPage() {
             setMessageType('success');
             setMessage('Success! redirecting to verification...');
             setJustRegistered(true);
+
+            // set temp cookie to enable access to verify page
+            setCookie(null, 'verify_access', 'true', {
+                maxAge: 15 * 60, // 15 minutes
+                sameSite: 'strict',
+                path: '/',
+            });
+            
             // redirect to the verification page
             router.push('/verify');
         })
