@@ -1,5 +1,6 @@
 'use client';
 
+import apiClient from "@/utils/api";
 import { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { CheckCircle, PersonVcard, PiggyBank, TelephoneInbound, XCircle } from "react-bootstrap-icons";
@@ -12,6 +13,7 @@ export default function EditUserModal({ user, show, onHide }) {
     const [newPhone, setNewPhone] = useState(user?.phone);
     const [newBalance, setNewBalance] = useState(user?.balance);
     const [submitted, setSubmitted] = useState(false);
+    const [success, setSuccess] = useState(false);
 
     useEffect(() => {
         if (user) {
@@ -29,11 +31,32 @@ export default function EditUserModal({ user, show, onHide }) {
         e.preventDefault();
         setSubmitted(true);
 
-        // remember to multiply balance by 100 to convert to cents
+        await apiClient.put(`/users/${user._id}`, {
+            name: newName,
+            phone: newPhone,
+            balance: newBalance * 100,
+        })
+        .then((_response) => {
+            setSuccess(true);
+            setSubmitted(false);
+        })
+        .catch((error) => {
+            console.error("[EditUserModal] Error updating user", error);
+            setSubmitted(false);
+        });
+    }
+
+    const handleHide = () => {
+        setTimeout(() => {
+            setSuccess(false);
+            setSubmitted(false);
+        }, 1000);
+        onHide();
     }
 
     return (
-        <Modal show={show} onHide={onHide} backdrop="static">
+        <Modal show={show} onHide={handleHide} backdrop="static">
+            {!success && (
             <Form onSubmit={handleSubmit}>
                 <Modal.Header closeButton>
                     <Modal.Title>{`Edit ${user.name}'s profile`}</Modal.Title>
@@ -69,12 +92,23 @@ export default function EditUserModal({ user, show, onHide }) {
                         <CheckCircle size="22" color="white" />
                         <span style={{ verticalAlign: 'middle' }}> {' '} {submitted ? 'Submitting...' : 'Save changes'}</span>
                     </Button>
-                    <Button variant="secondary" onClick={onHide}>
+                        <Button variant="secondary" onClick={handleHide}>
                         <XCircle size="22" color="white" />
                         <span style={{ verticalAlign: 'middle' }}> {' '} Cancel</span>
                     </Button>
                 </Modal.Footer>
             </Form>
+            )}
+
+            {success && (
+                <Modal.Body>
+                    <h4>Success!</h4>
+                    <p>User profile updated successfully.</p>
+                    <Button variant="primary" onClick={handleHide}>
+                        Close
+                    </Button>
+                </Modal.Body>
+            )}
         </Modal>
     );
 }
