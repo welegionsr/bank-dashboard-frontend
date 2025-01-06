@@ -20,6 +20,9 @@ export const UserProvider = ({ children }) => {
         onError: () => handleLogout(), // Logout on error
     });
 
+    // values for incomplete user data, used in registration and verification pages
+    const [incompleteUser, setIncompleteUser] = useState(null);
+
     const [role, setRole] = useState(null);
 
 
@@ -42,6 +45,8 @@ export const UserProvider = ({ children }) => {
             isLoading,
             isError,
             valid,
+            incompleteUser,
+            setIncompleteUser,
             refetch,
             handleLogout,
             setUser: updateUser

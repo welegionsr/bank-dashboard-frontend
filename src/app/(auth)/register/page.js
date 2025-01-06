@@ -26,26 +26,24 @@ export default function RegisterPage() {
 
         setSubmitted(true);
 
-        try {
-            const response = await apiClient.post('/auth/register', { email, password, phone, name, balance: balance * 100 });
-
+        await apiClient.post('/auth/register',
+             { email, password, phone, name, balance: balance * 100 })
+        .then(_response => {
             //save incomplete user object to context, to be used temporarily in verification page
-            const userForVerification = {email, name, phone};
-            userContext.setUser(userForVerification);
-
-            console.log("user object after setting incomplete data: ", userContext.user);
+            const userForVerification = { email, name, phone };
+            userContext.setIncompleteUser(userForVerification);
 
             setMessageType('success');
             setMessage('Success! redirecting to verification...');
             setJustRegistered(true);
             // redirect to the verification page
             router.push('/verify');
-        }
-        catch (err) {
+        })
+        .catch(_err => {
             setMessageType('warning');
             setMessage('Registration failed! Please make sure that the data you provided is valid.');
             setSubmitted(false);
-        }
+        });
     };
 
     return (
