@@ -8,9 +8,9 @@ import { fetchCurrentUser } from "@/app/api/usersApi";
 
 const userContext = createContext();
 
-export const UserProvider = ({ children }) => {   
+export const UserProvider = ({ children }) => {
     const queryClient = useQueryClient(); // Access the QueryClient
- 
+
     const [valid, setValid] = useState(false);
 
     const { data: user, isError, isLoading, refetch } = useQuery({
@@ -23,16 +23,20 @@ export const UserProvider = ({ children }) => {
     // values for incomplete user data, used in registration and verification pages
     // Load initial value from sessionStorage if available
     const [incompleteUser, setIncompleteUserState] = useState(() => {
-        const savedValue = sessionStorage.getItem('incompleteUser');
-        return savedValue ? JSON.parse(savedValue) : null;
+        if (typeof window !== 'undefined' && sessionStorage) {
+            const savedValue = sessionStorage.getItem('incompleteUser');
+            return savedValue ? JSON.parse(savedValue) : null;
+        }
     });
 
     const setIncompleteUser = (value) => {
         setIncompleteUserState(value);
-        if (value === null) {
-            sessionStorage.removeItem('incompleteUser');
-        } else {
-            sessionStorage.setItem('incompleteUser', JSON.stringify(value));
+        if (typeof window !== 'undefined' && sessionStorage) {
+            if (value === null) {
+                sessionStorage.removeItem('incompleteUser');
+            } else {
+                sessionStorage.setItem('incompleteUser', JSON.stringify(value));
+            }
         }
     };
 
