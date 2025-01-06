@@ -10,7 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from 'react';
 import UserTransactionsModal from '../admin/UserTransactionsModal';
 
-export default function UserList() {
+export default function UserList({ filters }) {
     const { token } = parseCookies();
     const [showTransactionModal, setShowTransactionModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
@@ -20,6 +20,24 @@ export default function UserList() {
         queryFn: () => fetchUsers(token),
         enabled: true,
         staleTime: 5 * 60 * 1000,
+    });
+
+    // Apply filters
+    const filteredUsers = users?.filter(user => {
+        const searchTermLower = filters.searchTerm.toLowerCase(); 
+        const matchesSearch =
+            user.name.toLowerCase().includes(searchTermLower) ||
+            user.email.toLowerCase().includes(searchTermLower);
+
+        const matchesAdminFilter = !filters.filterAdmins || user.role === 'admin';
+        
+        return matchesSearch && matchesAdminFilter;
+    })
+    .sort((a, b) => {
+        if (filters.descSort) {
+            return b.name.localeCompare(a.name); // Sort in descending order
+        }
+        return a.name.localeCompare(b.name); // Sort in ascending order
     });
 
 
@@ -33,7 +51,7 @@ export default function UserList() {
 
     return (
         <div className="user-list">
-            {!users?.length && (
+            {!filteredUsers?.length && (
                 <Container className='mt-4 mb-2'>
                     <Row>
                         <Col className='d-flex justify-content-md-center align-items-center'>
@@ -42,13 +60,13 @@ export default function UserList() {
                     </Row>
                     <Row>
                         <Col className='d-flex justify-content-md-center align-items-center'>
-                            <p className='mt-2'>No users exist in the system :(</p>
+                            <p className='mt-2'>No users match the filter criteria :(</p>
                         </Col>
                     </Row>
                 </Container>
             )}
 
-            {users?.length > 0 && users.map((user, index) => (
+            {filteredUsers?.length > 0 && filteredUsers.map((user, index) => (
                 <UserRow
                     key={index}
                     user={user}
