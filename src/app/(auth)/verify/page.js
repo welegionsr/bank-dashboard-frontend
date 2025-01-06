@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { useUser } from "@/utils/UserContext";
 import VerifyField from "@/components/form/VerifyField";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import { destroyCookie } from "nookies";
 
 
 export default function VerifyPage() {
@@ -19,6 +20,11 @@ export default function VerifyPage() {
     const userContext = useUser();
     const { setMessage, setMessageType } = useAuth();
     const router = useRouter();
+
+    // clear the temp cookie that enables access to this page
+    useEffect(() => {
+        destroyCookie(null, 'verify_access');
+    }, []);
 
     // Effect to handle the countdown timer
     useEffect(() => {

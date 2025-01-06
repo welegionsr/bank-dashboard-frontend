@@ -5,13 +5,21 @@ export async function middleware(req) {
     const url = req.nextUrl.clone();
     const isValid = req.cookies.get('session_valid')?.value === 'true';
     const userRole = req.cookies.get('session_role')?.value;
+    const canAccessVerify = req.cookies.get('verify_access')?.value === 'true';
 
     console.log("[Middleware]", "session_valid: ", req.cookies.get('session_valid'));
     console.log("[Middleware]", "IsValid: ", isValid);
     console.log("[Middleware]", "UserRole: ", userRole);
 
+    if (url.pathname === '/verify') {
+        if (!canAccessVerify) {
+            // Redirect to dashboard if logged in, otherwise to login
+            return NextResponse.redirect(new URL(isValid ? '/dashboard' : '/login', req.url));
+        }
+        return NextResponse.next(); // Allow access to /verify
+    }
 
-    if (url.pathname === '/login' || url.pathname === '/register' || url.pathname === '/verify') {
+    if (url.pathname === '/login' || url.pathname === '/register') {
         if (isValid) {
             console.log("[Middleware]", "Session valid. Redirecting to /dashboard.");
             return NextResponse.redirect(new URL('/dashboard', req.url));
