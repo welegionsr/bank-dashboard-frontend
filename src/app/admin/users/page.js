@@ -2,20 +2,27 @@
 
 import UserFilter from "@/components/UserList/UserFilter";
 import UserList from "@/components/UserList/UserList";
+import { useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 
 
 export default function ManageUsersPage() {
+    const [filters, setFilters] = useState({
+        searchTerm: '',
+        filterAdmins: false,
+        descSort: false,
+    });
+
     return (
         <Container>
             <Row>
                 <Col className="d-flex justify-content-md-center align-items-center">
-                    <UserFilter />
+                    <UserFilter filters={filters} setFilters={setFilters} />
                 </Col>
             </Row>
             <Row>
                 <Col className="d-flex justify-content-md-center align-items-center">
-                    <UserList />
+                    <UserList filters={filters} />
                 </Col>
             </Row>
         </Container>
