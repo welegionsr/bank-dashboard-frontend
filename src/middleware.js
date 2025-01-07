@@ -5,7 +5,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 const retrySessionCheck = async (req, retries = 3, delay = 100) => {
     const cookies = req.headers.get('cookie') || '';
-    console.log(`[Middleware] Forwarding cookies: ${cookieHeader}`);
+    console.log(`[Middleware] Forwarding cookies: ${cookies}`);
     
     for (let i = 0; i < retries; i++) {
         try {
