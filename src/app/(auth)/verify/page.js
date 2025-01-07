@@ -10,6 +10,7 @@ import { useUser } from "@/utils/UserContext";
 import VerifyField from "@/components/form/VerifyField";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { destroyCookie } from "nookies";
+import Head from "next/head";
 
 
 export default function VerifyPage() {
@@ -98,54 +99,59 @@ export default function VerifyPage() {
     }
 
     return (
-        <Container className="mt-4">
-            <Card className="form">
-                <Card.Header>
-                    <KeyFill size="22" color="black" /> {' '}
-                    Verify your account to continue!
-                </Card.Header>
-                <Card.Body>
-                    <DotLottieReact
-                        src="animations/email-verify.lottie"
-                        autoplay
-                        loop
-                    />
-                    <Card.Text className="mt-4" style={{padding: '0 1rem'}}>
-                        An email with a passcode is on its way to your inbox!<br/>
-                    </Card.Text>
-                </Card.Body>
-                <Alert style={{ margin: '0.2rem 1rem', fontSize: '0.75rem', padding: '8px' }}><strong>Note:</strong> the passcode is valid for the next 10 minutes.</Alert>
-                <Card.Body>
-                    <Form onSubmit={handleSubmit}>
-                        <Form.Group className="mb-3" controlId="formPasscode">
-                            <Form.Label><EnvelopePaper size="18" /> {' '} Enter the passcode</Form.Label>
-                            <VerifyField
-                                length={6} // 6-digit code
-                                onChange={(value) => setVerificationCode(value)}
-                            />
-                            <Form.Text className="text-muted">
-                                It&apos;s the 6-digit code that was sent to you by email.
-                            </Form.Text>
-                        </Form.Group>
+        <>
+            <Head>
+                <title>Verify Account | GoldFront Bank</title>
+            </Head>
+            <Container className="mt-4">
+                <Card className="form">
+                    <Card.Header>
+                        <KeyFill size="22" color="black" /> {' '}
+                        Verify your account to continue!
+                    </Card.Header>
+                    <Card.Body>
+                        <DotLottieReact
+                            src="animations/email-verify.lottie"
+                            autoplay
+                            loop
+                        />
+                        <Card.Text className="mt-4" style={{padding: '0 1rem'}}>
+                            An email with a passcode is on its way to your inbox!<br/>
+                        </Card.Text>
+                    </Card.Body>
+                    <Alert style={{ margin: '0.2rem 1rem', fontSize: '0.75rem', padding: '8px' }}><strong>Note:</strong> the passcode is valid for the next 10 minutes.</Alert>
+                    <Card.Body>
+                        <Form onSubmit={handleSubmit}>
+                            <Form.Group className="mb-3" controlId="formPasscode">
+                                <Form.Label><EnvelopePaper size="18" /> {' '} Enter the passcode</Form.Label>
+                                <VerifyField
+                                    length={6} // 6-digit code
+                                    onChange={(value) => setVerificationCode(value)}
+                                />
+                                <Form.Text className="text-muted">
+                                    It&apos;s the 6-digit code that was sent to you by email.
+                                </Form.Text>
+                            </Form.Group>
 
-                        <Button variant="primary" type="submit" disabled={submitted}>
-                            {submitted ? 'Verifying...' : 'Verify'}
+                            <Button variant="primary" type="submit" disabled={submitted}>
+                                {submitted ? 'Verifying...' : 'Verify'}
+                            </Button>
+                        </Form>
+                    </Card.Body>
+                    <Card.Footer>
+                        <EnvelopeX size="22" color="black" style={{ marginRight: "4px" }} /> {' '}
+                        Didn&apos;t get an email? {' '}
+                        <Button
+                            variant="link"
+                            style={{ padding: "0", cursor: "pointer", textDecoration: "none" }}
+                            onClick={handleResend}
+                            disabled={resent}
+                        >
+                            {resent ? `Resend in ${Math.floor(resendTimer / 60)}:${String(resendTimer % 60).padStart(2, '0')}...` : "Send a new one!"}
                         </Button>
-                    </Form>
-                </Card.Body>
-                <Card.Footer>
-                    <EnvelopeX size="22" color="black" style={{ marginRight: "4px" }} /> {' '}
-                    Didn&apos;t get an email? {' '}
-                    <Button
-                        variant="link"
-                        style={{ padding: "0", cursor: "pointer", textDecoration: "none" }}
-                        onClick={handleResend}
-                        disabled={resent}
-                    >
-                        {resent ? `Resend in ${Math.floor(resendTimer / 60)}:${String(resendTimer % 60).padStart(2, '0')}...` : "Send a new one!"}
-                    </Button>
-                </Card.Footer>
-            </Card>
-        </Container>
+                    </Card.Footer>
+                </Card>
+            </Container>
+        </>
     );
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import '@/app/(auth)/auth.css';
+import Head from 'next/head';
 import { Button, Card, Container, Form } from "react-bootstrap";
 import apiClient from "@utils/api";
 import { useState } from "react";
@@ -8,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "../layout";
 import { Envelope, Key, PersonPlusFill, PersonVcardFill } from 'react-bootstrap-icons';
 import { useUser } from '@/utils/UserContext';
+import { setCookie } from 'nookies';
 
 export default function LoginPage() {
     const router = useRouter();
@@ -24,10 +26,18 @@ export default function LoginPage() {
         setSubmitted(true);
 
         apiClient.post('/auth/login', { email, password })
-            .then(_response => {
+            .then(async _response => {
                 setMessageType('success');
                 setMessage('Success! Redirecting to dashboard...');
-                userContext.refetch();
+
+                // create cookie that indicates the user is logged in
+                setCookie(null, 'isLoggedIn', 'true', {
+                    maxAge: 20 * 60, // 20 minutes
+                    sameSite: 'strict',
+                    path: '/',
+                    secure: process.env.NODE_ENV === 'production',
+                });
+                await userContext.refetch();
                 // redirect to the dashboard page
                 router.push('/dashboard');
             })
@@ -56,43 +66,48 @@ export default function LoginPage() {
 
 
     return (
-        <Container className="mt-4">
-            <Card className="form">
-                <Card.Header>
-                    <PersonVcardFill size="22" color="black" /> {' '}
-                    Sign in to your account!
-                </Card.Header>
-                <Card.Body>
-                    <Form onSubmit={handleSubmit}>
-                        <Form.Group className="mb-3" controlId="formEmail">
-                            <Form.Label><Envelope size="18" /> {' '} Email address</Form.Label>
-                            <Form.Control type="email" placeholder="..." value={email} onChange={(e) => setEmail(e.target.value)} required />
-                            <Form.Text className="text-muted">
-                                The email address you used to sign up.
-                            </Form.Text>
-                        </Form.Group>
+        <>
+            <Head>
+                <title>Login | GoldFront Bank</title>
+            </Head>
+            <Container className="mt-4">
+                <Card className="form">
+                    <Card.Header>
+                        <PersonVcardFill size="22" color="black" /> {' '}
+                        Sign in to your account!
+                    </Card.Header>
+                    <Card.Body>
+                        <Form onSubmit={handleSubmit}>
+                            <Form.Group className="mb-3" controlId="formEmail">
+                                <Form.Label><Envelope size="18" /> {' '} Email address</Form.Label>
+                                <Form.Control type="email" placeholder="..." value={email} onChange={(e) => setEmail(e.target.value)} required />
+                                <Form.Text className="text-muted">
+                                    The email address you used to sign up.
+                                </Form.Text>
+                            </Form.Group>
 
-                        <Form.Group className="mb-3" controlId="formPassword">
-                            <Form.Label><Key size="18" />{' '} Password</Form.Label>
-                            <Form.Control type="password" placeholder="..." value={password} onChange={(e) => setPassword(e.target.value)} required />
-                        </Form.Group>
+                            <Form.Group className="mb-3" controlId="formPassword">
+                                <Form.Label><Key size="18" />{' '} Password</Form.Label>
+                                <Form.Control className='no-autofill' type="password" placeholder="..." value={password} onChange={(e) => setPassword(e.target.value)} required />
+                            </Form.Group>
 
-                        <Button variant="primary" type="submit" disabled={submitted}>
-                            {submitted ? 'Logging in...' : 'Login'}
-                        </Button>
-                    </Form>
-                </Card.Body>
-                <Card.Footer>
-                    <PersonPlusFill size="22" color="black" style={{ marginRight: "4px" }} /> {' '}
-                    Don&apos;t have an account? {' '}
-                    <Card.Link
-                        style={{ cursor: "pointer", textDecoration: "none" }}
-                        onClick={() => { router.push("/register") }}
-                    >
-                        Register!
-                    </Card.Link>
-                </Card.Footer>
-            </Card>
-        </Container>
+                            <Button variant="primary" type="submit" disabled={submitted}>
+                                {submitted ? 'Logging in...' : 'Login'}
+                            </Button>
+                        </Form>
+                    </Card.Body>
+                    <Card.Footer>
+                        <PersonPlusFill size="22" color="black" style={{ marginRight: "4px" }} /> {' '}
+                        Don&apos;t have an account? {' '}
+                        <Card.Link
+                            style={{ cursor: "pointer", textDecoration: "none" }}
+                            onClick={() => { router.push("/register") }}
+                        >
+                            Register!
+                        </Card.Link>
+                    </Card.Footer>
+                </Card>
+            </Container>
+        </>
     );
 }

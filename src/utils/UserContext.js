@@ -4,20 +4,35 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createContext, useContext, useEffect, useState } from "react";
 import { globalLogout } from "./logout";
 import { fetchCurrentUser } from "@/app/api/usersApi";
+import { parseCookies } from "nookies";
 
 
 const userContext = createContext();
 
 export const UserProvider = ({ children }) => {
-    const queryClient = useQueryClient(); // Access the QueryClient
+    const queryClient = useQueryClient();
+    const [loggedIn, setLoggedIn] = useState(false);
+    const { isLoggedIn } = parseCookies();
+    const loggedInBool = isLoggedIn === 'true'; // Ensure it's a boolean
 
-    const [valid, setValid] = useState(false);
+    useEffect(() => {
+        if (loggedIn !== loggedInBool) {
+            setLoggedIn(loggedInBool);
+        }
+    }, [loggedInBool, loggedIn]);
+
 
     const { data: user, isError, isLoading, refetch } = useQuery({
         queryKey: ["user"],
         queryFn: fetchCurrentUser,
         retry: false,
+        enabled: loggedIn,
+        onSuccess: (data) => {
+            console.log("[onSuccess] User data fetched successfully:", data);
+            setRole(data.role);
+        },
         onError: () => handleLogout(), // Logout on error
+        staleTime: 10 * 60 * 1000, // 10 minutes
     });
 
     // values for incomplete user data, used in registration and verification pages
@@ -44,6 +59,7 @@ export const UserProvider = ({ children }) => {
 
 
     const handleLogout = () => {
+        setLoggedIn(false);
         sessionStorage.removeItem("role");
         queryClient.clear();
         globalLogout();
@@ -61,7 +77,6 @@ export const UserProvider = ({ children }) => {
             role: user?.role || role,
             isLoading,
             isError,
-            valid,
             incompleteUser,
             setIncompleteUser,
             refetch,
