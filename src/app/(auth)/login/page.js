@@ -26,21 +26,27 @@ export default function LoginPage() {
         setSubmitted(true);
 
         apiClient.post('/auth/login', { email, password })
-            .then(_response => {
-                setMessageType('success');
-                setMessage('Success! Redirecting to dashboard...');
+            .then(async response => {
+                // Check if login was successful and response is valid
+                if (response.status === 200) {
+                    setMessageType('success');
+                    setMessage('Success! Redirecting to dashboard...');
 
-                // create cookie that indicates the user is logged in
-                setCookie(null, 'isLoggedIn', 'true', {
-                    maxAge: 20 * 60, // 20 minutes
-                    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-                    path: '/',
-                    secure: process.env.NODE_ENV === 'production',
-                    ...(process.env.NODE_ENV === 'production' && { partitioned: true }), // Add partitioned only in production
-                });
-                userContext.refetch();
-                // redirect to the dashboard page
-                router.push('/dashboard');
+                    // Wait until the server has set the session cookies
+                    setCookie(null, 'isLoggedIn', 'true', {
+                        maxAge: 20 * 60, // 20 minutes
+                        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+                        path: '/',
+                        secure: process.env.NODE_ENV === 'production',
+                        ...(process.env.NODE_ENV === 'production' && { partitioned: true }), // Add partitioned only in production
+                    });
+
+                    // Optionally refetch user context to ensure updated state
+                    await userContext.refetch();
+
+                    // Redirect after ensuring cookies are set and session is established
+                    router.push('/dashboard');
+                }
             })
             .catch(err => {
                 if (err.status === 403) {

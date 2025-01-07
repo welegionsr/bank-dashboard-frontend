@@ -1,6 +1,30 @@
 import { NextResponse } from 'next/server';
 import apiClient from '@/utils/api';
 
+const isProduction = process.env.NODE_ENV === 'production';
+
+const retrySessionCheck = async (req, retries = 3, delay = 100) => {
+    for (let i = 0; i < retries; i++) {
+        try {
+            console.log(`[Middleware] Attempt ${i + 1} to validate session...`);
+            const response = await apiClient.get('/auth/session', {
+                headers: { 'Cookie': req.headers.get('cookie') },
+            });
+
+            if (response.status === 200 && response.data.isValid) {
+                return response.data; // Return session data if valid
+            }
+        } catch (error) {
+            console.error(`[Middleware] Attempt ${i + 1} failed:`, error.message || error);
+        }
+
+        // Wait before retrying
+        await new Promise(resolve => setTimeout(resolve, delay));
+    }
+
+    return null; // If all retries fail, return null
+};
+
 export async function middleware(req) {
     const url = req.nextUrl.clone();
     const isValid = req.cookies.get('session_valid')?.value === 'true';
@@ -39,31 +63,23 @@ export async function middleware(req) {
         return NextResponse.next();
     }
 
-    try {
-        console.log("[Middleware]", "Checking session validity with the server...");
-        const response = await apiClient.get('/auth/session', {
-            headers: { 'Cookie': req.headers.get('cookie') },
-        });
+    // If session validity is unknown, try validating with the server
+    const sessionData = await retrySessionCheck(req);
+    if (sessionData) {
+        console.log("[Middleware]", "Session valid after retry. Setting validation cookie.");
+        const res = NextResponse.next();
+        res.cookies.set('session_valid', 'true', { maxAge: 300, httpOnly: true, sameSite: isProduction ? 'none' : 'lax', ...(isProduction && { partitioned: true }) });
+        res.cookies.set('session_role', sessionData.role, { maxAge: 300, httpOnly: true, sameSite: isProduction ? 'none' : 'lax', ...(isProduction && { partitioned: true }) });
 
-        if (response.status === 200 && response.data.isValid) {
-            console.log("[Middleware]", "Session valid. Setting validation cookie.");
-            const res = NextResponse.next();
-            res.cookies.set('session_valid', 'true', { maxAge: 300, httpOnly: true, sameSite: 'none', partitioned: true });
-            res.cookies.set('session_role', response.data.role, { maxAge: 300, httpOnly: true, sameSite: 'none', partitioned: true });
-            
-            // Check if accessing an admin route and if the user has the 'admin' role
-            if (url.pathname.startsWith('/admin') && response.data.role !== 'admin') {
-                console.log("[Middleware]", "User does not have admin privileges. Redirecting to /dashboard.");
-                return NextResponse.redirect(new URL('/dashboard', req.url));
-            }
-            
-            return res;
+        if (url.pathname.startsWith('/admin') && sessionData.role !== 'admin') {
+            console.log("[Middleware]", "User does not have admin privileges. Redirecting to /dashboard.");
+            return NextResponse.redirect(new URL('/dashboard', req.url));
         }
-    } catch (error) {
-        console.error("[Middleware] Session verification failed. response: ", error)
-        console.log("[Middleware]", "Session invalid. Redirecting to /login.");
+
+        return res;
     }
 
+    console.log("[Middleware]", "Session invalid after retries. Redirecting to /login.");
     return NextResponse.redirect(new URL('/login', req.url));
 }
 
