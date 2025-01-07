@@ -4,7 +4,7 @@ import apiClient from '@/utils/api';
 const isProduction = process.env.NODE_ENV === 'production';
 
 const retrySessionCheck = async (req, retries = 3, delay = 100) => {
-    const cookieHeader = req.headers.get('cookie') || '';
+    const cookies = req.headers.get('cookie') || '';
     console.log(`[Middleware] Forwarding cookies: ${cookieHeader}`);
     
     for (let i = 0; i < retries; i++) {
@@ -12,7 +12,7 @@ const retrySessionCheck = async (req, retries = 3, delay = 100) => {
             console.log(`[Middleware] Attempt ${i + 1} to validate session...`);
             const response = await apiClient.get('/auth/session', {
                 headers: {
-                    Cookie: cookieHeader, // Forward all cookies from the request
+                    'Cookie': cookies, // Forward all cookies from the request
                 }
             });
 
