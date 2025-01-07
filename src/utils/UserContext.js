@@ -14,7 +14,6 @@ export const UserProvider = ({ children }) => {
     const [loggedIn, setLoggedIn] = useState(false);
     const { isLoggedIn } = parseCookies();
     const loggedInBool = isLoggedIn === 'true'; // Ensure it's a boolean
-    const [valid, setValid] = useState(false);
 
     useEffect(() => {
         if (loggedIn !== loggedInBool) {
@@ -31,7 +30,6 @@ export const UserProvider = ({ children }) => {
         onSuccess: (data) => {
             console.log("[onSuccess] User data fetched successfully:", data);
             setRole(data.role);
-            setValid(true);
         },
         onError: () => handleLogout(), // Logout on error
         staleTime: 10 * 60 * 1000, // 10 minutes
@@ -79,7 +77,6 @@ export const UserProvider = ({ children }) => {
             role: user?.role || role,
             isLoading,
             isError,
-            valid,
             incompleteUser,
             setIncompleteUser,
             refetch,
