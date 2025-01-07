@@ -25,7 +25,7 @@ export default function LoginPage() {
 
         setSubmitted(true);
 
-        apiClient.post('/auth/login', { email, password })
+        await apiClient.post('/auth/login', { email, password })
             .then(async response => {
                 // Check if login was successful and response is valid
                 if (response.status === 200) {
