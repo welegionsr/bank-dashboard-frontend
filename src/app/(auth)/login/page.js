@@ -33,7 +33,7 @@ export default function LoginPage() {
                 // create cookie that indicates the user is logged in
                 setCookie(null, 'isLoggedIn', 'true', {
                     maxAge: 20 * 60, // 20 minutes
-                    sameSite: 'strict',
+                    sameSite: 'none',
                     path: '/',
                     secure: process.env.NODE_ENV === 'production',
                 });
