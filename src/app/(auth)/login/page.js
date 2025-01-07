@@ -26,19 +26,19 @@ export default function LoginPage() {
         setSubmitted(true);
 
         apiClient.post('/auth/login', { email, password })
-            .then(async _response => {
+            .then(_response => {
                 setMessageType('success');
                 setMessage('Success! Redirecting to dashboard...');
 
                 // create cookie that indicates the user is logged in
                 setCookie(null, 'isLoggedIn', 'true', {
                     maxAge: 20 * 60, // 20 minutes
-                    sameSite: 'none',
+                    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
                     path: '/',
                     secure: process.env.NODE_ENV === 'production',
-                    partitioned: true,
+                    ...(process.env.NODE_ENV === 'production' && { partitioned: true }), // Add partitioned only in production
                 });
-                await userContext.refetch();
+                userContext.refetch();
                 // redirect to the dashboard page
                 router.push('/dashboard');
             })
