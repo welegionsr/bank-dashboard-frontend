@@ -2,24 +2,22 @@
 
 import { Spinner } from "react-bootstrap";
 import ContactPill from "./ContactPill";
-import { parseCookies } from "nookies";
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'; import { deleteContact, fetchContacts } from "@/app/api/usersApi";
 
 export default function ContactRow({ userId, onContactChoice })
 {
-    const { token } = parseCookies();
     const queryClient = useQueryClient();
 
     const { data: contacts, isLoading, error } = useQuery({
         queryKey: ['contacts', userId],
-        queryFn: () => userId ? fetchContacts(userId, token) : Promise.reject('User id is null'),
+        queryFn: () => userId ? fetchContacts(userId) : Promise.reject('User id is null'),
         enabled: !!userId, // Only run query if userId is truthy
         staleTime: 15 * 60 * 1000, // Optional: Cache duration
     });
 
     // Mutation to delete a saved contact
     const deleteContactMutation = useMutation({
-        mutationFn: (contactId) => deleteContact(userId, contactId, token),
+        mutationFn: (contactId) => deleteContact(userId, contactId),
         onSuccess: () => {
             queryClient.invalidateQueries(['contacts'], userId);
         },

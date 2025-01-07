@@ -1,7 +1,6 @@
 'use client';
 
 import apiClient from "@/utils/api";
-import { parseCookies } from "nookies";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Container, Button, Row } from "react-bootstrap";
@@ -9,7 +8,6 @@ import { PersonAdd, PersonCheck } from "react-bootstrap-icons";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 export default function TransactionSuccess({ transaction }) {
-    const { token } = parseCookies();
     const [success, setSuccess] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     const [message, setMessage] = useState("Save to Contacts");
@@ -19,11 +17,7 @@ export default function TransactionSuccess({ transaction }) {
 
         setSubmitted(true);
 
-        apiClient.post(`/users/${transaction.sender}/contacts`, { contactId: transaction.receiver._id }, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        })
+        apiClient.post(`/users/${transaction.sender}/contacts`, { contactId: transaction.receiver._id })
         .then(_response => {
             setMessage("Saved!");
             queryClient.invalidateQueries('contacts');

@@ -6,18 +6,16 @@ import { ExclamationOctagon } from 'react-bootstrap-icons';
 import { Col, Container, Row, Spinner } from 'react-bootstrap';
 import { useQuery } from '@tanstack/react-query';
 import { fetchMyTransactions, fetchUserTransactions } from '@/app/api/transactionsApi';
-import { parseCookies } from 'nookies';
 import { formatDateTime } from '@/utils/dateUtils';
 import { useUser } from '@/utils/UserContext';
 
 
 export default function TransactionList({userEmail}){
-    const {token} = parseCookies();
     const userContext = useUser();
 
     const { data: transactions, isLoading, error } = useQuery({
         queryKey: ['transactions', userEmail],
-        queryFn: () => userEmail ? ( userEmail === userContext.user.email ? fetchMyTransactions(token) : fetchUserTransactions(userEmail, token)) : Promise.reject('User email is null'),
+        queryFn: () => userEmail ? ( userEmail === userContext.user.email ? fetchMyTransactions() : fetchUserTransactions(userEmail)) : Promise.reject('User email is null'),
         enabled: !!userEmail, // Only run query if userEmail is truthy
         staleTime: 5 * 60 * 1000, // Optional: Cache duration
     });

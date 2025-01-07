@@ -28,7 +28,7 @@ const retrySessionCheck = async (req, retries = 3, delay = 100) => {
 export async function middleware(req) {
     const url = req.nextUrl.clone();
     const isValid = req.cookies.get('session_valid')?.value === 'true';
-    const userRole = req.cookies.get('session_role')?.value;
+    const userRole = req.cookies.get('role')?.value;
     const canAccessVerify = req.cookies.get('verify_access')?.value === 'true';
 
     console.log("[Middleware]", "session_valid: ", req.cookies.get('session_valid'));
@@ -68,8 +68,7 @@ export async function middleware(req) {
     if (sessionData) {
         console.log("[Middleware]", "Session valid after retry. Setting validation cookie.");
         const res = NextResponse.next();
-        res.cookies.set('session_valid', 'true', { maxAge: 300, httpOnly: true, sameSite: isProduction ? 'none' : 'lax', ...(isProduction && { partitioned: true }) });
-        res.cookies.set('session_role', sessionData.role, { maxAge: 300, httpOnly: true, sameSite: isProduction ? 'none' : 'lax', ...(isProduction && { partitioned: true }) });
+        res.cookies.set('session_valid', 'true', { maxAge: 300, httpOnly: true, secure: isProduction, sameSite: isProduction ? 'none' : 'lax', ...(isProduction && { partitioned: true }) });
 
         if (url.pathname.startsWith('/admin') && sessionData.role !== 'admin') {
             console.log("[Middleware]", "User does not have admin privileges. Redirecting to /dashboard.");

@@ -5,21 +5,19 @@ import { Col, Container, Row, Spinner } from "react-bootstrap";
 import { ExclamationOctagon } from "react-bootstrap-icons";
 import UserRow from "./UserRow";
 import { fetchUsers } from "@/app/api/usersApi";
-import { parseCookies } from "nookies";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from 'react';
 import UserTransactionsModal from '../admin/UserTransactionsModal';
 import EditUserModal from '../admin/EditUserModal';
 
 export default function UserList({ filters }) {
-    const { token } = parseCookies();
     const [showTransactionModal, setShowTransactionModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
 
     const { data: users, isLoading, error } = useQuery({
         queryKey: ['users'],
-        queryFn: () => fetchUsers(token),
+        queryFn: fetchUsers,
         enabled: true,
         staleTime: 5 * 60 * 1000,
     });

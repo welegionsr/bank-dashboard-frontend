@@ -3,7 +3,6 @@
 import apiClient from "@/utils/api";
 import { useUser } from "@/utils/UserContext";
 import { useQueryClient } from "@tanstack/react-query";
-import { parseCookies } from "nookies";
 import { useState } from "react";
 import { Alert, Badge, Button, Form, Modal } from "react-bootstrap";
 import { CheckCircle, Send, XCircle } from "react-bootstrap-icons";
@@ -13,7 +12,6 @@ import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 export default function SendMoneyPopup({ show, onHide }) {
     const userContext = useUser();
-    const { token } = parseCookies();
     const [recipientEmail, setRecipientEmail] = useState('');
     const [amount, setAmount] = useState(0);
     const [submitted, setSubmitted] = useState(false);
@@ -59,11 +57,7 @@ export default function SendMoneyPopup({ show, onHide }) {
 
         setSubmitted(true);
 
-        apiClient.post(`/transactions`, { sender: userContext.user.email, receiver: recipientEmail, amount: amountInCents }, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        })
+        apiClient.post(`/transactions`, { sender: userContext.user.email, receiver: recipientEmail, amount: amountInCents })
             .then(response => {
                 setError('');
                 setTransaction(response.data.transaction);
