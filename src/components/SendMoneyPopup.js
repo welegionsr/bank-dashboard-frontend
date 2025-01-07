@@ -127,7 +127,7 @@ export default function SendMoneyPopup({ show, onHide }) {
                                     onChange={(e) => setAmount(e.target.value)}
                                     required
                                 />
-                                {userContext.valid && (<span>
+                                {userContext.user && (<span>
                                     <Badge className="mt-2" bg="warning" text="dark">Maximum amount you can send: ${userContext.user.balance / 100}</Badge>
                                 </span>)}
                             </Form.Group>

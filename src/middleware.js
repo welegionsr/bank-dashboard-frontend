@@ -48,8 +48,8 @@ export async function middleware(req) {
         if (response.status === 200 && response.data.isValid) {
             console.log("[Middleware]", "Session valid. Setting validation cookie.");
             const res = NextResponse.next();
-            res.cookies.set('session_valid', 'true', { maxAge: 300, httpOnly: true });
-            res.cookies.set('session_role', response.data.role, { maxAge: 300, httpOnly: true });
+            res.cookies.set('session_valid', 'true', { maxAge: 300, httpOnly: true, sameSite: 'strict' });
+            res.cookies.set('session_role', response.data.role, { maxAge: 300, httpOnly: true, sameSite: 'strict' });
             
             // Check if accessing an admin route and if the user has the 'admin' role
             if (url.pathname.startsWith('/admin') && response.data.role !== 'admin') {

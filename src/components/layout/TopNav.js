@@ -1,14 +1,13 @@
 'use client';
 
-import { Jockey_One } from 'next/font/google';
 import '@/styles/TopNav.css';
 import { useUser } from '@/utils/UserContext';
-import { Button, Container, Navbar, Spinner, Stack } from "react-bootstrap";
+import { Button, Container, Navbar, Stack } from "react-bootstrap";
 import { BoxArrowRight, PersonLock } from 'react-bootstrap-icons';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { jockeyOne } from '@/utils/fonts';
 
-const jockeyOne = Jockey_One({ subsets: ['latin'], weight: '400' });
 
 export default function TopNav() {
     const { user, role, isLoading, isError, handleLogout } = useUser();
