@@ -1,5 +1,5 @@
 'use client';
-
+import '@/app/admin/users/manage-users.css';
 import UserFilter from "@/components/UserList/UserFilter";
 import UserList from "@/components/UserList/UserList";
 import { useState } from "react";
@@ -14,7 +14,7 @@ export default function ManageUsersPage() {
     });
 
     return (
-        <Container>
+        <Container className="manage-users-page">
             <Row>
                 <Col className="d-flex justify-content-md-center align-items-center">
                     <UserFilter filters={filters} setFilters={setFilters} />

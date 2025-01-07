@@ -9,10 +9,12 @@ import { parseCookies } from "nookies";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from 'react';
 import UserTransactionsModal from '../admin/UserTransactionsModal';
+import EditUserModal from '../admin/EditUserModal';
 
 export default function UserList({ filters }) {
     const { token } = parseCookies();
     const [showTransactionModal, setShowTransactionModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
 
     const { data: users, isLoading, error } = useQuery({
@@ -71,12 +73,13 @@ export default function UserList({ filters }) {
                     key={index}
                     user={user}
                     onDelete={() => console.log('Delete user: ', user.name)}
-                    onEdit={() => console.log('Edit user: ', user.name)}
+                    onEdit={() => { setSelectedUser(user); setShowEditModal(true); }}
                     onInfo={() => { setSelectedUser(user); setShowTransactionModal(true); }}
                 />
             ))}
 
             <UserTransactionsModal user={selectedUser} show={showTransactionModal} onHide={() => setShowTransactionModal(false)} />
+            <EditUserModal user={selectedUser} show={showEditModal} onHide={() => setShowEditModal(false)} />
         </div>
     );
 }
