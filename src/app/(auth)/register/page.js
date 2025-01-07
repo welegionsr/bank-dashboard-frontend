@@ -44,6 +44,7 @@ export default function RegisterPage() {
                 maxAge: 15 * 60, // 15 minutes
                 sameSite: 'none',
                 path: '/',
+                partitioned: true,
             });
             
             // redirect to the verification page

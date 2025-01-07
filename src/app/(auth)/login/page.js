@@ -36,6 +36,7 @@ export default function LoginPage() {
                     sameSite: 'none',
                     path: '/',
                     secure: process.env.NODE_ENV === 'production',
+                    partitioned: true,
                 });
                 await userContext.refetch();
                 // redirect to the dashboard page
