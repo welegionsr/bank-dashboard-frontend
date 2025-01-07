@@ -4,11 +4,16 @@ import apiClient from '@/utils/api';
 const isProduction = process.env.NODE_ENV === 'production';
 
 const retrySessionCheck = async (req, retries = 3, delay = 100) => {
+    const cookieHeader = req.headers.get('cookie') || '';
+    console.log(`[Middleware] Forwarding cookies: ${cookieHeader}`);
+    
     for (let i = 0; i < retries; i++) {
         try {
             console.log(`[Middleware] Attempt ${i + 1} to validate session...`);
             const response = await apiClient.get('/auth/session', {
-                headers: { 'Cookie': req.headers.get('cookie') },
+                headers: {
+                    Cookie: cookieHeader, // Forward all cookies from the request
+                }
             });
 
             if (response.status === 200 && response.data.isValid) {
@@ -27,11 +32,15 @@ const retrySessionCheck = async (req, retries = 3, delay = 100) => {
 
 export async function middleware(req) {
     const url = req.nextUrl.clone();
+
+    console.log("[Middleware] Checks before redirect to: ", url.pathname);
+    console.log("[Middleware] Incoming cookies:", req.headers.get('cookie'));
+
     const isValid = req.cookies.get('session_valid')?.value === 'true';
     const userRole = req.cookies.get('role')?.value;
     const canAccessVerify = req.cookies.get('verify_access')?.value === 'true';
 
-    console.log("[Middleware]", "session_valid: ", req.cookies.get('session_valid'));
+    console.log("[Middleware]", "session_valid: ", req.cookies.get('session_valid')?.value);
     console.log("[Middleware]", "IsValid: ", isValid);
     console.log("[Middleware]", "UserRole: ", userRole);
 
