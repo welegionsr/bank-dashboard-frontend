@@ -60,6 +60,7 @@ export async function middleware(req) {
             return res;
         }
     } catch (error) {
+        console.error("[Middleware] Session verification failed. response: ", error)
         console.log("[Middleware]", "Session invalid. Redirecting to /login.");
     }
 
