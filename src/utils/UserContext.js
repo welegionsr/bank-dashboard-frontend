@@ -67,7 +67,6 @@ export const UserProvider = ({ children }) => {
 
     const updateUser = (newUser) => {
         setRole(newUser.role || "guest");
-        setValid(true);
         sessionStorage.setItem("role", newUser.role || "guest");
     };
 
