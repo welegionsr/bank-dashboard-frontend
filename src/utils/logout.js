@@ -23,9 +23,7 @@ export const globalLogout = async () => {
 
             console.log("[Logout] User logged out successfully, redirecting to /login");
             
-            setTimeout(() => {
-                window.location.replace('/login');
-            }, 2000);
+            window.location.replace('/login');
         })
         .catch(error => {
             console.error('[Logout] Failed to logout:', error.response?.data?.message || error);
