@@ -44,7 +44,7 @@ export default function RegisterPage() {
             // set temp cookie to enable access to verify page
             setCookie(null, 'verify_access', 'true', {
                 maxAge: 15 * 60, // 15 minutes
-                sameSite: isProduction ? 'none' : 'lax',
+                sameSite: isProduction ? 'None' : 'Lax',
                 secure: isProduction,
                 path: '/',
                 ...(process.env.NODE_ENV === 'production' && { partitioned: true })

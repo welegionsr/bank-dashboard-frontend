@@ -11,6 +11,9 @@ import { Envelope, Key, PersonPlusFill, PersonVcardFill } from 'react-bootstrap-
 import { useUser } from '@/utils/UserContext';
 import { setCookie } from 'nookies';
 
+const isProduction = process.env.NODE_ENV === 'production';
+
+
 export default function LoginPage() {
     const router = useRouter();
     const [email, setEmail] = useState('');
@@ -35,10 +38,10 @@ export default function LoginPage() {
                     // Wait until the server has set the session cookies
                     setCookie(null, 'isLoggedIn', 'true', {
                         maxAge: 20 * 60, // 20 minutes
-                        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+                        sameSite: isProduction ? 'None' : 'Lax',
                         path: '/',
-                        secure: process.env.NODE_ENV === 'production',
-                        ...(process.env.NODE_ENV === 'production' && { partitioned: true }), // Add partitioned only in production
+                        secure: isProduction,
+                        ...(isProduction && { partitioned: true }), // Add partitioned only in production
                     });
 
                     // Optionally refetch user context to ensure updated state
@@ -52,7 +55,18 @@ export default function LoginPage() {
                 if (err.status === 403) {
                     // handle case when the account exists but isn't verified yet
                     // redirect to the verify page
-                    userContext.setUser({ email });
+
+                    // set temp cookie to enable access to verify page
+                    setCookie(null, 'verify_access', 'true', {
+                        maxAge: 15 * 60, // 15 minutes
+                        sameSite: isProduction ? 'None' : 'Lax',
+                        secure: isProduction,
+                        path: '/',
+                        ...(isProduction && { partitioned: true })
+                    });
+
+                    userContext.setIncompleteUser({ email });
+                    console.log("[Verify] User account not verified... Redirecting to /verify");
                     router.push('/verify');
                 }
                 else if (err.status === 400) {
