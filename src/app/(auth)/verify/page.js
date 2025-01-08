@@ -12,6 +12,7 @@ import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { destroyCookie } from "nookies";
 import Head from "next/head";
 
+const isProduction = process.env.NODE_ENV === 'production';
 
 export default function VerifyPage() {
     const [verificationCode, setVerificationCode] = useState('');
