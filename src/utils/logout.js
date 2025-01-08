@@ -3,12 +3,14 @@ import apiClient from "./api";
 
 export const globalLogout = async () => {
     
-    try {
-        await apiClient.post('/auth/logout');
-        destroyCookie(null, 'isLoggedIn');
-        window.location.replace('/login');
-    }
-    catch(error){
-        console.error('Failed to logout:', error.response?.data?.message || error);
-    }
+    await apiClient.post('/auth/logout')
+        .then(_response => {
+            destroyCookie(null, 'isLoggedIn');
+            console.log("user logged out successfully, redirecting to /login");
+            window.location.replace('/login');
+        })
+        .catch(error => {
+            console.error('Failed to logout:', error.response?.data?.message || error);
+
+        });
 };
