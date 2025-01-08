@@ -17,7 +17,10 @@ export const globalLogout = async () => {
             destroyCookie(null, 'session_valid', cookieOptions);
 
             console.log("[Logout] User logged out successfully, redirecting to /login");
-            window.location.replace('/login');
+            
+            setTimeout(() => {
+                window.location.replace('/login');
+            }, 2000);
         })
         .catch(error => {
             console.error('[Logout] Failed to logout:', error.response?.data?.message || error);

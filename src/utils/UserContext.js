@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createContext, useContext, useEffect, useState } from "react";
 import { globalLogout } from "./logout";
 import { fetchCurrentUser } from "@/app/api/usersApi";
-import { parseCookies } from "nookies";
+import { destroyCookie, parseCookies } from "nookies";
 
 
 const userContext = createContext();
@@ -59,15 +59,23 @@ export const UserProvider = ({ children }) => {
 
 
     const handleLogout = async () => {
+        const { isLoggedIn } = parseCookies();
+        if (isLoggedIn) {
+            destroyCookie(null, "isLoggedIn");
+        }
         setLoggedIn(false);
-        sessionStorage.removeItem("role");
+        if (typeof window !== 'undefined' && sessionStorage) {
+            sessionStorage.removeItem("role");
+        }
         queryClient.clear();
         await globalLogout();
     };
 
     const updateUser = (newUser) => {
         setRole(newUser.role || "guest");
-        sessionStorage.setItem("role", newUser.role || "guest");
+        if (typeof window !== 'undefined' && sessionStorage) {
+            sessionStorage.setItem("role", newUser.role || "guest");
+        }
     };
 
     return (
