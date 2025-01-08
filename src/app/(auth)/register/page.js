@@ -47,7 +47,8 @@ export default function RegisterPage() {
                 sameSite: isProduction ? 'None' : 'Lax',
                 secure: isProduction,
                 path: '/',
-                ...(process.env.NODE_ENV === 'production' && { partitioned: true })
+                ...(process.env.NODE_ENV === 'production' && { partitioned: true }),
+                ...(isProduction && { domain: process.env.DEPLOY_DOMAIN }),
             });
             
             // redirect to the verification page

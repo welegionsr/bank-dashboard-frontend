@@ -39,9 +39,10 @@ export default function LoginPage() {
                     setCookie(null, 'isLoggedIn', 'true', {
                         maxAge: 20 * 60, // 20 minutes
                         sameSite: isProduction ? 'None' : 'Lax',
-                        path: '/',
                         secure: isProduction,
+                        path: '/',
                         ...(isProduction && { partitioned: true }), // Add partitioned only in production
+                        ...(isProduction && { domain: process.env.DEPLOY_DOMAIN }),
                     });
 
                     // Optionally refetch user context to ensure updated state
@@ -62,7 +63,8 @@ export default function LoginPage() {
                         sameSite: isProduction ? 'None' : 'Lax',
                         secure: isProduction,
                         path: '/',
-                        ...(isProduction && { partitioned: true })
+                        ...(isProduction && { partitioned: true }),
+                        ...(isProduction && { domain: process.env.DEPLOY_DOMAIN }),
                     });
 
                     userContext.setIncompleteUser({ email });

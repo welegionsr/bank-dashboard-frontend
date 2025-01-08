@@ -6,7 +6,7 @@ import { globalLogout } from "./logout";
 import { fetchCurrentUser } from "@/app/api/usersApi";
 import { destroyCookie, parseCookies } from "nookies";
 
-
+const isProduction = process.env.NODE_ENV === 'production';
 const userContext = createContext();
 
 export const UserProvider = ({ children }) => {
@@ -61,7 +61,13 @@ export const UserProvider = ({ children }) => {
     const handleLogout = async () => {
         const { isLoggedIn } = parseCookies();
         if (isLoggedIn) {
-            destroyCookie(null, "isLoggedIn");
+            destroyCookie(null, "isLoggedIn", {
+                sameSite: isProduction ? 'None' : 'Lax',
+                secure: isProduction,
+                path: '/',
+                ...(isProduction && { partitioned: true }),
+                ...(isProduction && { domain: process.env.DEPLOY_DOMAIN }),
+            });
         }
         setLoggedIn(false);
         if (typeof window !== 'undefined' && sessionStorage) {

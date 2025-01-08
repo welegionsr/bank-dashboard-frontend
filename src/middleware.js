@@ -53,6 +53,7 @@ export async function middleware(req) {
     }
 
     if (url.pathname === '/login' || url.pathname === '/register') {
+        let isValid = req.cookies.get('session_valid')?.value === 'true';
         if (isValid) {
             console.log("[Middleware]", "Session valid. Redirecting to /dashboard.");
             return NextResponse.redirect(new URL('/dashboard', req.url));
@@ -77,7 +78,16 @@ export async function middleware(req) {
     if (sessionData) {
         console.log("[Middleware]", "Session valid after retry. Setting validation cookie.");
         const res = NextResponse.next();
-        res.cookies.set('session_valid', 'true', { maxAge: 300, httpOnly: true, secure: isProduction, sameSite: isProduction ? 'None' : 'Lax', ...(isProduction && { partitioned: true }) });
+        res.cookies.set('session_valid', 
+                        'true', 
+                        {   maxAge: 300, 
+                            httpOnly: true, 
+                            secure: isProduction, 
+                            sameSite: isProduction ? 'None' : 'Lax', 
+                            ...(isProduction && { partitioned: true }),
+                            path: '/',
+                            ...(isProduction && { domain: process.env.DEPLOY_DOMAIN }),
+                        });
 
         if (url.pathname.startsWith('/admin') && sessionData.role !== 'admin') {
             console.log("[Middleware]", "User does not have admin privileges. Redirecting to /dashboard.");

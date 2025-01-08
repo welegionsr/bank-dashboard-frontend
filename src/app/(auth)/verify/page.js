@@ -24,7 +24,13 @@ export default function VerifyPage() {
 
     // clear the temp cookie that enables access to this page
     useEffect(() => {
-        destroyCookie(null, 'verify_access');
+        destroyCookie(null, 'verify_access', {
+            sameSite: isProduction ? 'None' : 'Lax',
+            secure: isProduction,
+            path: '/',
+            ...(isProduction && { partitioned: true }),
+            ...(isProduction && { domain: process.env.DEPLOY_DOMAIN }),
+        });
     }, []);
 
     // Effect to handle the countdown timer
@@ -79,22 +85,22 @@ export default function VerifyPage() {
         setResent(true);
         setResendTimer(20); // start a timer of 20 seconds
 
-        const {email} = userContext.user;
+        const { email } = userContext.user;
 
-        apiClient.post('/auth/resend', {email})
-        .then(_response => {
-            setMessageType('info');
-            setMessage('A new code was sent to your email');
-            setTimeout(() => {
-                setMessage('');
-            }, 5000);
-        })
-        .catch(err => {
-            console.error('Resend error:', err.response?.data?.message || 'Resend failed');
-            setMessageType('warning');
-            setMessage('Failed to resend the verification email!');
-            setResent(false);
-        });
+        apiClient.post('/auth/resend', { email })
+            .then(_response => {
+                setMessageType('info');
+                setMessage('A new code was sent to your email');
+                setTimeout(() => {
+                    setMessage('');
+                }, 5000);
+            })
+            .catch(err => {
+                console.error('Resend error:', err.response?.data?.message || 'Resend failed');
+                setMessageType('warning');
+                setMessage('Failed to resend the verification email!');
+                setResent(false);
+            });
 
     }
 
@@ -115,8 +121,8 @@ export default function VerifyPage() {
                             autoplay
                             loop
                         />
-                        <Card.Text className="mt-4" style={{padding: '0 1rem'}}>
-                            An email with a passcode is on its way to your inbox!<br/>
+                        <Card.Text className="mt-4" style={{ padding: '0 1rem' }}>
+                            An email with a passcode is on its way to your inbox!<br />
                         </Card.Text>
                     </Card.Body>
                     <Alert style={{ margin: '0.2rem 1rem', fontSize: '0.75rem', padding: '8px' }}><strong>Note:</strong> the passcode is valid for the next 10 minutes.</Alert>
