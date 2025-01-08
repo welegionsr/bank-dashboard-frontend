@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server';
 import apiClient from '@/utils/api';
 
-const isProduction = process.env.NODE_ENV === 'production';
-
 const retrySessionCheck = async (req, retries = 3, delay = 100) => {
     const cookies = req.headers.get('cookie') || '';
     console.log(`[Middleware] Forwarding cookies: ${cookies}`);
@@ -78,24 +76,14 @@ export async function middleware(req) {
     // If session validity is unknown, try validating with the server
     const sessionData = await retrySessionCheck(req);
     if (sessionData) {
-        console.log("[Middleware]", "Session valid after retry. Setting validation cookie.");
+        console.log("[Middleware]", "Session valid after retry.");
         const res = NextResponse.next();
-        res.cookies.set('session_valid', 
-                        'true', 
-                        {   maxAge: 300, 
-                            httpOnly: true, 
-                            secure: isProduction, 
-                            sameSite: isProduction ? 'None' : 'Lax', 
-                            ...(isProduction && { partitioned: true }),
-                            path: '/',
-                            ...(isProduction && { domain: process.env.DEPLOY_DOMAIN }),
-                        });
 
         if (url.pathname.startsWith('/admin') && sessionData.role !== 'admin') {
             console.log("[Middleware]", "User does not have admin privileges. Redirecting to /dashboard.");
             return NextResponse.redirect(new URL('/dashboard', req.url));
         }
-
+        console.log("[Middleware]", "Redirecting to ", res.url.pathname);
         return res;
     }
 
