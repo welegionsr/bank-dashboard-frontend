@@ -36,10 +36,12 @@ export async function middleware(req) {
     console.log("[Middleware] Checks before redirect to: ", url.pathname);
     console.log("[Middleware] Incoming cookies:", req.headers.get('cookie'));
 
-    const isValid = req.cookies.get('session_valid')?.value === 'true';
+    const token = req.cookies.get('token')?.value;
+    const isValid = req.cookies.get('session_valid')?.value === 'true' && token;
     const userRole = req.cookies.get('role')?.value;
     const canAccessVerify = req.cookies.get('verify_access')?.value === 'true';
 
+    console.log("[Middleware]", "Token: ", token);
     console.log("[Middleware]", "session_valid: ", req.cookies.get('session_valid')?.value);
     console.log("[Middleware]", "IsValid: ", isValid);
     console.log("[Middleware]", "UserRole: ", userRole);
