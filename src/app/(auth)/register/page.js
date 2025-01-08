@@ -11,6 +11,8 @@ import { useUser } from '@/utils/UserContext';
 import { setCookie } from 'nookies';
 import Head from 'next/head';
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 
 export default function RegisterPage() {
     const [email, setEmail] = useState('');
@@ -42,9 +44,10 @@ export default function RegisterPage() {
             // set temp cookie to enable access to verify page
             setCookie(null, 'verify_access', 'true', {
                 maxAge: 15 * 60, // 15 minutes
-                sameSite: 'none',
+                sameSite: isProduction ? 'none' : 'lax',
+                secure: isProduction,
                 path: '/',
-                partitioned: true,
+                ...(process.env.NODE_ENV === 'production' && { partitioned: true })
             });
             
             // redirect to the verification page
