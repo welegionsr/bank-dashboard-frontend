@@ -60,7 +60,7 @@ export default function VerifyPage() {
         apiClient.post('/auth/verify', { email, verificationCode })
             .then(_response => {
                 setMessageType('success');
-                setMessage('Account Verified! Redirecting to login...');
+                setMessage('Account Verified! Please sign in to continue.');
                 userContext.setIncompleteUser(null); // Clear the incomplete user data
                 router.push('/login');  // Redirect to the login page
             })

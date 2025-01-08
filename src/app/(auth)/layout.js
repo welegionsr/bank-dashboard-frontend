@@ -30,7 +30,7 @@ export default function DashboardLayout({ children }) {
                     </Col>
                     <Col className="form-section" xs={12} md={5} xl={4} >
                         <main className="form-card">
-                            {message && <Alert variant={messageType} className='mt-4' style={{ textAlign: "center" }}>{message}</Alert>}
+                            {message && <Alert variant={messageType} className='mt-4' style={{ textAlign: "center", width: "auto", minWidth: "16rem", margin: "0.8rem" }}>{message}</Alert>}
                             {children}
                         </main>
                     </Col>
