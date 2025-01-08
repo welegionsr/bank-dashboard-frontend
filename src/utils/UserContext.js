@@ -11,9 +11,11 @@ const userContext = createContext();
 
 export const UserProvider = ({ children }) => {
     const queryClient = useQueryClient();
-    const [loggedIn, setLoggedIn] = useState(false);
     const { isLoggedIn } = parseCookies();
-    const loggedInBool = isLoggedIn === 'true'; // Ensure it's a boolean
+    const loggedInBool = isLoggedIn === 'true';
+    const [loggedIn, setLoggedIn] = useState(loggedInBool);
+    const [role, setRole] = useState(null);
+
 
     useEffect(() => {
         if (loggedIn !== loggedInBool) {
@@ -55,26 +57,30 @@ export const UserProvider = ({ children }) => {
         }
     };
 
-    const [role, setRole] = useState(null);
-
-
     const handleLogout = async () => {
-        const { isLoggedIn } = parseCookies();
-        if (isLoggedIn) {
-            destroyCookie(null, "isLoggedIn", {
-                sameSite: isProduction ? 'None' : 'Lax',
-                secure: isProduction,
-                path: '/',
-                ...(isProduction && { partitioned: true }),
-                ...(isProduction && { domain: process.env.DEPLOY_DOMAIN }),
-            });
+        try {
+            const { isLoggedIn } = parseCookies(); // get the latest cookie snapshot to ensure we're not using stale data
+            if (isLoggedIn) {
+                destroyCookie(null, "isLoggedIn", {
+                    sameSite: isProduction ? 'None' : 'Lax',
+                    secure: isProduction,
+                    path: '/',
+                    ...(isProduction && { partitioned: true }),
+                    ...(isProduction && { domain: process.env.DEPLOY_DOMAIN }),
+                });
+            }
+            setLoggedIn(false);
+            setRole(null);
+            if (typeof window !== 'undefined' && sessionStorage) {
+                sessionStorage.removeItem("role");
+            }
+            queryClient.clear();
+            await globalLogout();
         }
-        setLoggedIn(false);
-        if (typeof window !== 'undefined' && sessionStorage) {
-            sessionStorage.removeItem("role");
+        catch (error) {
+            console.error("[handleLogout] Error during logout:", error);
         }
-        queryClient.clear();
-        await globalLogout();
+
     };
 
     const updateUser = (newUser) => {
