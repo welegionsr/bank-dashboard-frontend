@@ -58,11 +58,11 @@ export const UserProvider = ({ children }) => {
     const [role, setRole] = useState(null);
 
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
         setLoggedIn(false);
         sessionStorage.removeItem("role");
         queryClient.clear();
-        globalLogout();
+        await globalLogout();
     };
 
     const updateUser = (newUser) => {
