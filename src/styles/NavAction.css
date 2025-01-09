@@ -1,0 +1,12 @@
+
+.nav-action {
+    border-radius: 0px;
+    border-bottom: 3px solid transparent;
+    transition: border-bottom .3s;
+    transform: translateZ(0);
+    will-change: border-bottom;
+}
+
+.nav-action:hover {
+    border-bottom: 3px solid rgb(238, 180, 56);
+}
