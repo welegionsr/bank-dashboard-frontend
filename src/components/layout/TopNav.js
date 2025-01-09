@@ -43,7 +43,7 @@ export default function TopNav() {
     return (
         <Navbar className="top-nav" sticky="top">
             <Container>
-                <Navbar.Brand href='/dashboard' className='logo'>
+                <Navbar.Brand className='logo' onClick={() => router.push('/dashboard')} style={{cursor: 'pointer'}}>
                     <Image
                         src='/images/logo-nav.webp'
                         alt='GoldFront Bank logo'
