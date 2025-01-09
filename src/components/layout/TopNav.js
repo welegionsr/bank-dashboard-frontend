@@ -3,10 +3,11 @@
 import '@/styles/TopNav.css';
 import { useUser } from '@/utils/UserContext';
 import { Button, Container, Navbar, Stack } from "react-bootstrap";
-import { BoxArrowRight, PersonLock } from 'react-bootstrap-icons';
+import { Bell, BoxArrowRight, PersonLock } from 'react-bootstrap-icons';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { jockeyOne } from '@/utils/fonts';
+import NavAction from './NavAction';
 
 
 export default function TopNav() {
@@ -35,7 +36,7 @@ export default function TopNav() {
             </Navbar>
         );
     }
-    
+
     const isLoggedIn = Boolean(user);
     const isAdmin = role === "admin";
 
@@ -60,16 +61,33 @@ export default function TopNav() {
                         {/* Admin Button */}
                         {isLoading ? (
                             <div style={{ visibility: "hidden" }}>
-                                <Button className="btn-admin" variant='light'>
-                                    <PersonLock size="16" /> Admin
-                                </Button>
+                                <NavAction className="btn-admin" variant='link' tooltipPlacement='bottom' tooltipText='Admin Dashboard'>
+                                    <PersonLock size="24" color='black' />
+                                </NavAction>
                             </div>
                         ) : (
                             isAdmin && (
                                 <Navbar.Text>
-                                    <Button className="btn-admin" variant='light' onClick={() => { router.push('/admin') }}>
-                                        <PersonLock size="16" color='black' /> Admin
-                                    </Button>
+                                    <NavAction className="btn-admin" variant='link' onClick={() => { router.push('/admin') }} tooltipPlacement='bottom' tooltipText='Admin Dashboard'>
+                                        <PersonLock size="24" color='black' />
+                                    </NavAction>
+                                </Navbar.Text>
+                            )
+                        )}
+
+                        {/* Notifications Button */}
+                        {isLoading ? (
+                            <div style={{ visibility: "hidden" }}>
+                                <NavAction className="btn-notifications" variant='link' tooltipPlacement='bottom' tooltipText='Recent Notifications'>
+                                    <Bell size="24" color='black' />
+                                </NavAction>
+                            </div>
+                        ) : (
+                            isLoggedIn && (
+                                <Navbar.Text>
+                                    <NavAction className="btn-notifications" variant='link' onClick={handleLogout} tooltipPlacement='bottom' tooltipText='Recent Notifications'>
+                                        <Bell size="24" color='black' />
+                                    </NavAction>
                                 </Navbar.Text>
                             )
                         )}
@@ -77,16 +95,16 @@ export default function TopNav() {
                         {/* Logout Button */}
                         {isLoading ? (
                             <div style={{ visibility: "hidden" }}>
-                                <Button className="btn-logout" variant='dark'>
-                                    <BoxArrowRight size="16" /> Sign out
-                                </Button>
+                                <NavAction className="btn-logout" variant='link' tooltipPlacement='bottom' tooltipText='Sign out'>
+                                    <BoxArrowRight size="24" color='black' />
+                                </NavAction>
                             </div>
                         ) : (
                             isLoggedIn && (
                                 <Navbar.Text>
-                                    <Button className="btn-logout" variant='dark' onClick={handleLogout}>
-                                        <BoxArrowRight size="16" color='white' /> Sign out
-                                    </Button>
+                                    <NavAction className="btn-logout" variant='link' onClick={handleLogout} tooltipPlacement='bottom' tooltipText='Sign out'>
+                                        <BoxArrowRight size="24" color='black' />
+                                    </NavAction>
                                 </Navbar.Text>
                             )
                         )}
