@@ -1,12 +1,15 @@
 'use client';
 
+import '@/styles/notifications/NotificationPane.css';
 import { Col, Container, Offcanvas, Row } from "react-bootstrap";
 import { ListCheck } from "react-bootstrap-icons";
 import NotificationRow from "./NotificationRow";
 import { setNotificationAsRead } from "@/app/api/notificationsApi";
 import { useQueryClient } from "@tanstack/react-query";
+import React from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 
-export default function NotificationPane({show, onHide, notifications}){
+export default function NotificationPane({ show, onHide, notifications }) {
     const queryClient = useQueryClient();
 
     const handleMarkRead = async (id) => {
@@ -15,8 +18,7 @@ export default function NotificationPane({show, onHide, notifications}){
             await setNotificationAsRead(id);
             queryClient.invalidateQueries(['notifications']);
         }
-        catch(error)
-        {
+        catch (error) {
             console.error("Couldn't update notification as read:", error);
         }
     };
@@ -28,28 +30,41 @@ export default function NotificationPane({show, onHide, notifications}){
             </Offcanvas.Header>
             <Offcanvas.Body style={{ padding: 0 }}>
                 {!notifications?.length && (
-                    <Container fluid className='mt-4 mb-2'>
-                        <Row>
-                            <Col className='d-flex justify-content-md-center align-items-center'>
-                                <ListCheck size={48} color='black' />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col className='d-flex justify-content-md-center align-items-center'>
-                                <p className='mt-2'>There are no new notifications to show you.</p>
-                            </Col>
-                        </Row>
-                    </Container>
-                )
-                }
+                    <div className="no-notifications-container">
+                        <Container fluid>
+                            <Row>
+                                <Col className='d-flex justify-content-md-center align-items-center'>
+                                    <ListCheck size={48} color='black' />
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col className='d-flex justify-content-md-center align-items-center'>
+                                    <p className='mt-2'>There are no new notifications to show you.</p>
+                                </Col>
+                            </Row>
+                        </Container>
+                    </div>
+                )}
 
-                {notifications?.length > 0 && notifications.map((notification, index) => (
-                    <NotificationRow
-                        key={index}
-                        notification={notification}
-                        onMarkRead={() => handleMarkRead(notification._id)}
-                    />
-                ))}
+                <div className="notification-list">
+                    <AnimatePresence>
+                        {notifications?.map((notification) => (
+                            <motion.div
+                                key={notification._id}
+                                initial={{ opacity: 0, x: 400 }} // Start off-screen to the right
+                                animate={{ opacity: 1, x: 0 }}  // Move into view
+                                exit={{ opacity: 0.3, x: 400 }}    // Exit off-screen to the right
+                                transition={{ duration: 0.5 }}  // Animation timing
+                            >
+                                <NotificationRow
+                                    notification={notification}
+                                    onMarkRead={() => handleMarkRead(notification._id)}
+                                />
+                            </motion.div>
+                        ))}
+                    </AnimatePresence>
+                </div>
+
             </Offcanvas.Body>
         </Offcanvas>
     );

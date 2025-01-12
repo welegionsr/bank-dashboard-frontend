@@ -96,14 +96,14 @@ export default function TopNav() {
                         {/* Notifications Button */}
                         {isLoading ? (
                             <div style={{ visibility: "hidden" }}>
-                                <NavAction className="btn-notifications" variant='link' tooltipPlacement='bottom' tooltipText='Unread Notifications'>
+                                <NavAction className="btn-notifications" variant='link' tooltipPlacement='bottom' tooltipText={`${notifications?.length ? `${notifications.length} New ` : 'No '} Notification${(notifications?.length > 1 || notifications?.length === 0) ? "s" : ''}`}>
                                     <Bell size="24" color='black' />
                                 </NavAction>
                             </div>
                         ) : (
                             isLoggedIn && (
                                 <Navbar.Text>
-                                    <NavAction className="btn-notifications" variant='link' onClick={handleShowNotifications} tooltipPlacement='bottom' tooltipText='Recent Notifications'>
+                                        <NavAction className="btn-notifications" variant='link' onClick={handleShowNotifications} tooltipPlacement='bottom' tooltipText={`${notifications?.length ? `${notifications.length} New ` : 'No '} Notification${(notifications?.length > 1 || notifications?.length === 0) ? "s" : ''}`}>
                                         <Bell size="24" color='black' />
                                     </NavAction>
                                     {notifications?.length > 0 && (
