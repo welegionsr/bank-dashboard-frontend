@@ -25,7 +25,7 @@ export default function NotificationPane({ show, onHide, notifications }) {
 
     return (
         <Offcanvas placement="end" show={show} onHide={onHide}>
-            <Offcanvas.Header closeButton>
+            <Offcanvas.Header closeButton style={{ boxShadow: '0px 2px 2px #e1e1e1'}}>
                 <Offcanvas.Title>Unread Notifications</Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body style={{ padding: 0 }}>
