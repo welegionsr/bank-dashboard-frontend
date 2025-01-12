@@ -1,0 +1,19 @@
+
+.notification {
+    padding: 12px;
+    border-bottom: 1px solid rgba(165, 165, 165, 0.349);
+}
+
+.notification-text {
+    font-size: 0.9rem;
+}
+
+.unread {
+    background: rgba(224, 247, 251, 0.644);
+    border-left: 8px solid #8edef7;
+}
+
+.notification-count {
+    transform: translate(-20px, -16px);
+    font-size: 0.6rem;
+}

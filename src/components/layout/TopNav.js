@@ -2,17 +2,38 @@
 
 import '@/styles/TopNav.css';
 import { useUser } from '@/utils/UserContext';
-import { Button, Container, Navbar, Stack } from "react-bootstrap";
+import { Badge, Container, Navbar, Stack } from "react-bootstrap";
 import { Bell, BoxArrowRight, PersonLock } from 'react-bootstrap-icons';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { jockeyOne } from '@/utils/fonts';
 import NavAction from './NavAction';
+import { useQuery } from '@tanstack/react-query';
+import { fetchMyUnreadNotifications } from '@/app/api/notificationsApi';
+import NotificationPane from '../notifications/NotificationPane';
+import { useState } from 'react';
 
 
 export default function TopNav() {
     const { user, role, isLoading, isError, handleLogout } = useUser();
     const router = useRouter();
+    const [showNotificationPane, setShowNotificationPane] = useState(false);
+
+    const isLoggedIn = Boolean(user);
+    const isAdmin = role === "admin";
+
+    // get user notifications
+    const { data: notifications, refetch } = useQuery({
+        queryKey: ["notifications"],
+        queryFn: fetchMyUnreadNotifications,
+        retry: false,
+        enabled: isLoggedIn,
+        staleTime: 10 * 60 * 1000, // 10 minutes
+    });
+
+    const handleShowNotifications = () => {
+        setShowNotificationPane(!showNotificationPane);
+    };
 
     // placeholder for when there's an error fetching the user data
     if (isError) {
@@ -37,13 +58,10 @@ export default function TopNav() {
         );
     }
 
-    const isLoggedIn = Boolean(user);
-    const isAdmin = role === "admin";
-
     return (
         <Navbar className="top-nav" sticky="top">
             <Container>
-                <Navbar.Brand className='logo' onClick={() => router.push('/dashboard')} style={{cursor: 'pointer'}}>
+                <Navbar.Brand className='logo' onClick={() => router.push('/dashboard')} style={{ cursor: 'pointer' }}>
                     <Image
                         src='/images/logo-nav.webp'
                         alt='GoldFront Bank logo'
@@ -78,16 +96,19 @@ export default function TopNav() {
                         {/* Notifications Button */}
                         {isLoading ? (
                             <div style={{ visibility: "hidden" }}>
-                                <NavAction className="btn-notifications" variant='link' tooltipPlacement='bottom' tooltipText='Recent Notifications'>
+                                <NavAction className="btn-notifications" variant='link' tooltipPlacement='bottom' tooltipText={`${notifications?.length ? `${notifications.length} New ` : 'No '} Notification${(notifications?.length > 1 || notifications?.length === 0) ? "s" : ''}`}>
                                     <Bell size="24" color='black' />
                                 </NavAction>
                             </div>
                         ) : (
                             isLoggedIn && (
                                 <Navbar.Text>
-                                    <NavAction className="btn-notifications" variant='link' onClick={handleLogout} tooltipPlacement='bottom' tooltipText='Recent Notifications'>
+                                        <NavAction className="btn-notifications" variant='link' onClick={handleShowNotifications} tooltipPlacement='bottom' tooltipText={`${notifications?.length ? `${notifications.length} New ` : 'No '} Notification${(notifications?.length > 1 || notifications?.length === 0) ? "s" : ''}`}>
                                         <Bell size="24" color='black' />
                                     </NavAction>
+                                    {notifications?.length > 0 && (
+                                        <Badge className="notification-count" pill bg="danger">{notifications.length}</Badge>
+                                    )}
                                 </Navbar.Text>
                             )
                         )}
@@ -111,6 +132,12 @@ export default function TopNav() {
                     </Stack>
                 </div>
             </Container>
+
+            <NotificationPane
+                show={showNotificationPane}
+                onHide={() => setShowNotificationPane(false)}
+                notifications={notifications}
+            />
         </Navbar>
     );
 }

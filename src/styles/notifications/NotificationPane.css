@@ -1,0 +1,36 @@
+/* Slide-right animation for entering */
+.slide-right-enter {
+    opacity: 0;
+    transform: translateX(-100%);
+    /* Start off-screen to the left */
+}
+
+.slide-right-enter-active {
+    opacity: 1;
+    transform: translateX(0);
+    /* Move into view */
+    transition: opacity 300ms ease, transform 300ms ease;
+}
+
+/* Slide-right animation for exiting */
+.slide-right-exit {
+    opacity: 1;
+    transform: translateX(0);
+    /* Start from its position in view */
+}
+
+.slide-right-exit-active {
+    opacity: 0;
+    transform: translateX(100%);
+    /* Slide out to the right */
+    transition: opacity 300ms ease, transform 300ms ease;
+}
+
+.no-notifications-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    text-align: center;
+    padding: 16px;
+}
