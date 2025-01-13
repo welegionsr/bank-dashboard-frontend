@@ -24,25 +24,38 @@ export default function UserList({ filters }) {
 
     // Apply filters
     const filteredUsers = users?.filter(user => {
-        const searchTermLower = filters.searchTerm.toLowerCase(); 
+        const searchTermLower = filters.searchTerm.toLowerCase();
         const matchesSearch =
             user.name.toLowerCase().includes(searchTermLower) ||
             user.email.toLowerCase().includes(searchTermLower);
 
         const matchesAdminFilter = !filters.filterAdmins || user.role === 'admin';
-        
+
         return matchesSearch && matchesAdminFilter;
     })
-    .sort((a, b) => {
-        if (filters.descSort) {
-            return b.name.localeCompare(a.name); // Sort in descending order
-        }
-        return a.name.localeCompare(b.name); // Sort in ascending order
-    });
+        .sort((a, b) => {
+            if (filters.descSort) {
+                return b.name.localeCompare(a.name); // Sort in descending order
+            }
+            return a.name.localeCompare(b.name); // Sort in ascending order
+        });
 
 
     if (isLoading) {
-        return <Spinner size='48' color='grey' />
+        return (
+            <Container className='p-4 user-list'>
+                <Row>
+                    <Col className='d-flex justify-content-md-center align-items-center'>
+                        <Spinner size='64' color='grey' />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col className='d-flex justify-content-md-center align-items-center'>
+                        <p className='mt-2'>Loading user data...</p>
+                    </Col>
+                </Row>
+            </Container>
+        );
     }
 
     if (error) {
