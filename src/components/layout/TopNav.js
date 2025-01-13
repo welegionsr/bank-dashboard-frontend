@@ -103,7 +103,7 @@ export default function TopNav() {
                         ) : (
                             isLoggedIn && (
                                 <Navbar.Text>
-                                        <NavAction className="btn-notifications" variant='link' onClick={handleShowNotifications} tooltipPlacement='bottom' tooltipText={`${notifications?.length ? `${notifications.length} New ` : 'No '} Notification${(notifications?.length > 1 || notifications?.length === 0) ? "s" : ''}`}>
+                                    <NavAction className="btn-notifications" variant='link' onClick={handleShowNotifications} tooltipPlacement='bottom' tooltipText={`${notifications?.length ? `${notifications.length} New ` : 'No '} Notification${(notifications?.length > 1 || notifications?.length === 0) ? "s" : ''}`}>
                                         <Bell size="24" color='black' />
                                     </NavAction>
                                     {notifications?.length > 0 && (

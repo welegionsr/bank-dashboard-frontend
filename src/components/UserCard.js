@@ -2,7 +2,7 @@
 
 import '@/styles/UserCard.css';
 import { useUser } from "@/utils/UserContext";
-import { Button, Card, Col, Container, Row, Spinner, Stack } from "react-bootstrap";
+import { Button, Card, Col, Container, Placeholder, Row, Stack } from "react-bootstrap";
 import { Clipboard2Data, SendPlusFill } from 'react-bootstrap-icons';
 
 export default function UserCard({ onPrimaryClick, primaryText, onSecondaryClick, secondaryText }) {
@@ -16,17 +16,37 @@ export default function UserCard({ onPrimaryClick, primaryText, onSecondaryClick
                         <Row>
                             <Col xs="7">
                                 <Row>
-                                    <h2 className='card-title'>Loading...</h2>
+                                    <Placeholder as={Card.Title} animation="glow">
+                                        <Placeholder xs={8} />
+                                    </Placeholder>
+                                    <Card.Body>
+                                        <Placeholder xs={4} size="sm" /><br/>
+                                        <Placeholder xs={6} size="lg" />
+                                    </Card.Body>
+                                    
                                 </Row>
                                 <hr style={{ marginTop: '0', marginRight: '1.15rem', color: 'grey' }} />
                                 <Row className='mt-4'>
-                                    <Spinner animation='border' role='status' />
+                                    <Stack direction='horizontal' gap={2}>
+                                        <Placeholder.Button
+                                            variant='primary'
+                                            className='menu-btn send-btn'
+                                            xs="6"
+                                        />
+                                        <Placeholder.Button
+                                            variant='secondary'
+                                            className='menu-btn history-btn'
+                                            xs="6"
+                                        />
+                                    </Stack>
                                 </Row>
                             </Col>
                             <Col xs="5" className='safe-back' />
                         </Row>
                     </Container>
                 </Card.Body>
+
+
             </Card>
         );
     }
