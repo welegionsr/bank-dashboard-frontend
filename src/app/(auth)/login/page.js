@@ -21,10 +21,27 @@ export default function LoginPage() {
     const { setMessage, setMessageType } = useAuth();
     const [submitted, setSubmitted] = useState(false);
     const userContext = useUser();
+    const [errors, setErrors] = useState({});
+
+    // validator functions
+    const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const validatePassword = (password) => password.length >= 6;
+
+    // main validation function
+    const validateForm = () => {
+        const newErrors = {};
+        if (!validateEmail(email)) newErrors.email = "Invalid email format!";
+        if (!validatePassword(password)) newErrors.password = "Password must be at least 6 characters!";
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // validate form first
+        if (!validateForm()) return;
 
         setSubmitted(true);
 
@@ -103,7 +120,17 @@ export default function LoginPage() {
                         <Form onSubmit={handleSubmit}>
                             <Form.Group className="mb-3" controlId="formEmail">
                                 <Form.Label><Envelope size="18" /> {' '} Email address</Form.Label>
-                                <Form.Control type="email" placeholder="..." value={email} onChange={(e) => setEmail(e.target.value)} required />
+                                <Form.Control 
+                                    type="email" 
+                                    placeholder="..." 
+                                    value={email} 
+                                    onChange={(e) => setEmail(e.target.value)} 
+                                    isInvalid={!!errors.email}
+                                    required 
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.email}
+                                </Form.Control.Feedback>
                                 <Form.Text className="text-muted">
                                     The email address you used to sign up.
                                 </Form.Text>
@@ -111,7 +138,18 @@ export default function LoginPage() {
 
                             <Form.Group className="mb-3" controlId="formPassword">
                                 <Form.Label><Key size="18" />{' '} Password</Form.Label>
-                                <Form.Control className='no-autofill' type="password" placeholder="..." value={password} onChange={(e) => setPassword(e.target.value)} required />
+                                <Form.Control 
+                                    className='no-autofill' 
+                                    type="password" 
+                                    placeholder="..." 
+                                    value={password} 
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    isInvalid={!!errors.password}
+                                    required
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.password}
+                                </Form.Control.Feedback>
                             </Form.Group>
 
                             <Button className='login-btn' variant="primary" type="submit" disabled={submitted}>
