@@ -105,7 +105,6 @@ export default function RegisterPage() {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     isInvalid={!!errors.email}
-                                    isValid={!errors.email}
                                     required
                                 />
                                 <Form.Control.Feedback type="invalid">
@@ -124,7 +123,6 @@ export default function RegisterPage() {
                                     value={password} 
                                     onChange={(e) => setPassword(e.target.value)} 
                                     isInvalid={!!errors.password}
-                                    isValid={!errors.password}
                                     required 
                                 />
                                 <Form.Control.Feedback type="invalid">
@@ -140,7 +138,6 @@ export default function RegisterPage() {
                                     value={name} 
                                     onChange={(e) => setName(e.target.value)} 
                                     isInvalid={!!errors.name}
-                                    isValid={!errors.name}
                                     required 
                                 />
                                 <Form.Control.Feedback type='invalid'>
@@ -159,7 +156,6 @@ export default function RegisterPage() {
                                     value={phone} 
                                     onChange={(e) => setPhone(e.target.value)} 
                                     isInvalid={!!errors.phone}
-                                    isValid={!errors.phone}
                                     required 
                                 />
                                 <Form.Control.Feedback type='invalid'>
@@ -178,7 +174,6 @@ export default function RegisterPage() {
                                     value={balance} 
                                     onChange={(e) => setBalance(e.target.value)} 
                                     isInvalid={!!errors.balance}
-                                    isValid={!errors.balance}
                                     required 
                                 />
                                 <Form.Control.Feedback type='invalid'>
