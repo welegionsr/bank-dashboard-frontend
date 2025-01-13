@@ -21,3 +21,7 @@
 .property-value {
     text-shadow: 0px 2px 0px rgba(0, 0, 0, 0.1);
 }
+
+.date {
+    border-bottom: 2px dotted rgb(146, 146, 146);
+}

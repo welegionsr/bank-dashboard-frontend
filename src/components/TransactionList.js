@@ -57,7 +57,7 @@ export default function TransactionList({userEmail}){
                 <TransactionCard
                     key={index}
                     name={(userEmail === transaction.receiver.email) ? transaction.sender.name : transaction.receiver.name}
-                    date={formatDateTime(transaction.date)}
+                    date={transaction.date}
                     amount={transaction.amount / 100}
                     isInbound={userEmail === transaction.receiver.email}
                 />
