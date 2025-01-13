@@ -10,6 +10,7 @@ import { Envelope, Key, PersonFillCheck, PersonVcard, PiggyBank, TelephoneInboun
 import { useUser } from '@/utils/UserContext';
 import { setCookie } from 'nookies';
 import Head from 'next/head';
+import { validateBalance, validateEmail, validateName, validatePassword, validatePhone } from '@/utils/validators';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -25,13 +26,6 @@ export default function RegisterPage() {
     const router = useRouter();
     const userContext = useUser();
     const [errors, setErrors] = useState({});
-
-    // validator functions
-    const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    const validatePassword = (password) => password.length >= 6;
-    const validateName = (name) => name.trim() !== '';
-    const validatePhone = (phone) => /^[0-9]{10}$/.test(phone);
-    const validateBalance = (balance) => !isNaN(balance) && balance > 0;
 
     // main validation function
     const validateForm = () => {

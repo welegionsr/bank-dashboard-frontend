@@ -10,6 +10,7 @@ import { useAuth } from "../layout";
 import { BoxArrowInRight, Envelope, Key, PersonPlusFill, PersonVcardFill } from 'react-bootstrap-icons';
 import { useUser } from '@/utils/UserContext';
 import { setCookie } from 'nookies';
+import { validateEmail, validatePassword } from '@/utils/validators';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -22,10 +23,6 @@ export default function LoginPage() {
     const [submitted, setSubmitted] = useState(false);
     const userContext = useUser();
     const [errors, setErrors] = useState({});
-
-    // validator functions
-    const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    const validatePassword = (password) => password.length >= 6;
 
     // main validation function
     const validateForm = () => {
