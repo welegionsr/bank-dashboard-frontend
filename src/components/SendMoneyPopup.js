@@ -9,6 +9,7 @@ import { CheckCircle, Send, XCircle } from "react-bootstrap-icons";
 import TransactionSuccess from "./TransactionSuccess";
 import ContactRow from "./contacts/ContactRow";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import { validateBalance, validateEmail } from "@/utils/validators";
 
 export default function SendMoneyPopup({ show, onHide }) {
     const userContext = useUser();
@@ -19,6 +20,17 @@ export default function SendMoneyPopup({ show, onHide }) {
     const [error, setError] = useState('');
     const queryClient = useQueryClient();
     const [transaction, setTransaction] = useState("");
+    const [errors, setErrors] = useState({});
+
+    // form validation
+    const validateForm = () => {
+        const newErrors = {};
+        if (!validateEmail(recipientEmail)) newErrors.email = "Invalid email format!";
+        if (!validateBalance(amount)) newErrors.amount = "Amount must be a positive number!";
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
 
     const handleHide = () => {
         onHide();
@@ -37,13 +49,10 @@ export default function SendMoneyPopup({ show, onHide }) {
 
     const handleSubmit = async () => {
 
+        if(!validateForm()) return;
+
         if (userContext.user.email === recipientEmail) {
             setError("It's not allowed to set yourself as the recipient");
-            return;
-        }
-
-        if (amount <= 0) {
-            setError("Amount must be a positive value");
             return;
         }
 
@@ -101,8 +110,12 @@ export default function SendMoneyPopup({ show, onHide }) {
                                     value={recipientEmail}
                                     disabled={submitted}
                                     onChange={(e) => setRecipientEmail(e.target.value)}
+                                    isInvalid={!!errors.email}
                                     required
                                 />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.email}
+                                </Form.Control.Feedback>
                             </Form.Group>
 
                             <small style={{ fontSize: '0.7rem', letterSpacing: '-0.3px' }}>Saved contacts:</small>
@@ -119,8 +132,12 @@ export default function SendMoneyPopup({ show, onHide }) {
                                     value={amount}
                                     disabled={submitted}
                                     onChange={(e) => setAmount(e.target.value)}
+                                    isInvalid={!!errors.amount}
                                     required
                                 />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.amount}
+                                </Form.Control.Feedback>
                                 {userContext.user && (<span>
                                     <Badge className="mt-2" bg="warning" text="dark">Maximum amount you can send: ${userContext.user.balance / 100}</Badge>
                                 </span>)}
