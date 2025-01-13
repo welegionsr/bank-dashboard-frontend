@@ -44,6 +44,11 @@ export async function middleware(req) {
     console.log("[Middleware]", "IsValid: ", isValid);
     console.log("[Middleware]", "UserRole: ", userRole);
 
+    // redirect from currently empty root page to main pages
+    if (url.pathname === '/') {
+        return NextResponse.redirect(new URL(isValid ? '/dashboard' : '/login', req.url));
+    }
+
     if (url.pathname === '/verify') {
         if (!canAccessVerify) {
             // Redirect to dashboard if logged in, otherwise to login
@@ -92,5 +97,5 @@ export async function middleware(req) {
 }
 
 export const config = {
-    matcher: ['/login', '/register', '/verify', '/admin/:path*', '/dashboard/:path*'],
+    matcher: ['/', '/login', '/register', '/verify', '/admin/:path*', '/dashboard/:path*'],
 };
