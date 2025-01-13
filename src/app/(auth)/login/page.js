@@ -7,7 +7,7 @@ import apiClient from "@utils/api";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../layout";
-import { Envelope, Key, PersonPlusFill, PersonVcardFill } from 'react-bootstrap-icons';
+import { BoxArrowInRight, Envelope, Key, PersonPlusFill, PersonVcardFill } from 'react-bootstrap-icons';
 import { useUser } from '@/utils/UserContext';
 import { setCookie } from 'nookies';
 
@@ -114,8 +114,9 @@ export default function LoginPage() {
                                 <Form.Control className='no-autofill' type="password" placeholder="..." value={password} onChange={(e) => setPassword(e.target.value)} required />
                             </Form.Group>
 
-                            <Button variant="primary" type="submit" disabled={submitted}>
-                                {submitted ? 'Logging in...' : 'Login'}
+                            <Button className='login-btn' variant="primary" type="submit" disabled={submitted}>
+                                <BoxArrowInRight size={22} color="white" /> {' '}
+                                <span style={{ verticalAlign: 'middle' }}>{submitted ? 'Signing in...' : 'Sign in'}</span>
                             </Button>
                         </Form>
                     </Card.Body>

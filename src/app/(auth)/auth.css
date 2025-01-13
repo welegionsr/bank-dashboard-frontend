@@ -30,3 +30,14 @@ body {
     min-width: 16rem;
     box-shadow: 0px 3px 8px;
 }
+
+.login-btn {
+  background: linear-gradient(135deg, #3fc84e, #3ca0c8);
+  border: 0;
+  padding: 8px 16px;
+  transition: filter 0.6s; 
+}
+
+.login-btn:hover {
+  filter: hue-rotate(80deg);
+}
