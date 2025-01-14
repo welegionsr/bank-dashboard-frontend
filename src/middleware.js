@@ -3,6 +3,7 @@ import apiClient from '@/utils/api';
 
 const retrySessionCheck = async (req, retries = 3, delay = 100) => {
     const cookies = req.headers.get('cookie') || '';
+    const origin = req.headers.get('origin') || process.env.FRONT_DOMAIN;
     console.log(`[Middleware] Forwarding cookies: ${cookies}`);
     
     for (let i = 0; i < retries; i++) {
@@ -11,7 +12,8 @@ const retrySessionCheck = async (req, retries = 3, delay = 100) => {
             const response = await apiClient.get('/auth/session', {
                 headers: {
                     'Cookie': cookies, // Forward all cookies from the request
-                }
+                    'Origin': origin, // explicitly set the origin to fix issues where it was missing
+                },
             });
 
             if (response.status === 200 && response.data.isValid) {

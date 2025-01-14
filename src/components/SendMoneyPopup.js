@@ -4,7 +4,7 @@ import apiClient from "@/utils/api";
 import { useUser } from "@/utils/UserContext";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Alert, Badge, Button, Form, Modal } from "react-bootstrap";
+import { Alert, Badge, Button, Form, Modal, Spinner } from "react-bootstrap";
 import { CheckCircle, Send, XCircle } from "react-bootstrap-icons";
 import TransactionSuccess from "./TransactionSuccess";
 import ContactRow from "./contacts/ContactRow";
@@ -87,6 +87,31 @@ export default function SendMoneyPopup({ show, onHide }) {
         return;
     }
 
+
+    const cancelButton = (
+        <Button
+            variant={success ? "primary" : "secondary"}
+            onClick={handleHide}
+            disabled={!success && submitted}
+        >
+            {success ? <CheckCircle size="22" color="white" /> : <XCircle size="22" color="white" />}
+            {' '}
+            {success ? "Done" : "Cancel"}
+        </Button>
+    );
+
+    const submitButton = !success && (
+        <Button variant="primary" onClick={handleSubmit} disabled={submitted}>
+            {submitted ? 
+                <Spinner size="sm" color="white" animation="border" /> 
+                : 
+                <Send size="22" color="white" />
+            }
+            {' '}
+            {submitted ? "Sending..." : "Confirm Transaction"}
+        </Button>
+    );
+
     return (
         <Modal show={show} onHide={handleHide} backdrop="static">
             <Modal.Header closeButton>
@@ -153,17 +178,9 @@ export default function SendMoneyPopup({ show, onHide }) {
                     <Alert variant="danger">{error}</Alert>
                 }
             </Modal.Body>
-            <Modal.Footer>
-                <Button variant={success ? "primary" : "secondary"} onClick={handleHide} disabled={!success && submitted}>
-                    {success ? <CheckCircle size="22" color="white" /> : <XCircle size="22" color="white" />} {' '}
-                    {success ? "Done" : "Cancel"}
-                </Button>
-                {!success &&
-                    <Button variant="primary" onClick={handleSubmit} disabled={submitted}>
-                        <Send size="22" color="white" /> {' '}
-                        {submitted ? "Sending..." : "Confirm Transaction"}
-                    </Button>
-                }
+            <Modal.Footer className="d-flex justify-content-between">
+                {cancelButton}
+                {submitButton}
             </Modal.Footer>
         </Modal>
     );

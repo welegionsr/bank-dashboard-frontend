@@ -2,7 +2,7 @@
 
 import '@/app/(auth)/auth.css';
 import Head from 'next/head';
-import { Button, Card, Container, Form } from "react-bootstrap";
+import { Button, Card, Container, Form, Spinner } from "react-bootstrap";
 import apiClient from "@utils/api";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -102,6 +102,20 @@ export default function LoginPage() {
     };
 
 
+    const submitButtonContent = submitted ? (
+        <>
+            <Spinner size="sm" color="white" animation="border" />
+            {' '}
+            <span style={{ verticalAlign: 'middle' }}>Signing in...</span>
+        </>
+    ) : (
+        <>
+            <BoxArrowInRight size={22} color="white" />
+            {' '}
+            <span style={{ verticalAlign: 'middle' }}>Sign in</span>
+        </>
+    );
+
     return (
         <>
             <Head>
@@ -150,8 +164,7 @@ export default function LoginPage() {
                             </Form.Group>
 
                             <Button className='login-btn' variant="primary" type="submit" disabled={submitted}>
-                                <BoxArrowInRight size={22} color="white" /> {' '}
-                                <span style={{ verticalAlign: 'middle' }}>{submitted ? 'Signing in...' : 'Sign in'}</span>
+                                {submitButtonContent}
                             </Button>
                         </Form>
                     </Card.Body>
