@@ -10,7 +10,7 @@ import { useAuth } from "../layout";
 import { BoxArrowInRight, Envelope, Key, PersonPlusFill, PersonVcardFill } from 'react-bootstrap-icons';
 import { useUser } from '@/utils/UserContext';
 import { setCookie } from 'nookies';
-import { validateEmail, validatePassword } from '@/utils/validators';
+import { validateEmail, validateLoginPassword } from '@/utils/validators';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -28,7 +28,7 @@ export default function LoginPage() {
     const validateForm = () => {
         const newErrors = {};
         if (!validateEmail(email)) newErrors.email = "Invalid email format!";
-        if (!validatePassword(password)) newErrors.password = "Password must be at least 6 characters!";
+        if (!validateLoginPassword(password)) newErrors.password = "Password must be at least 8 characters!"; // TODO: needs to be modified after I implement a way to reset passwords
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -51,7 +51,7 @@ export default function LoginPage() {
 
                     // Wait until the server has set the session cookies
                     setCookie(null, 'isLoggedIn', 'true', {
-                        maxAge: 20 * 60, // 20 minutes
+                        maxAge: 30 * 60, // 30 minutes
                         sameSite: isProduction ? 'None' : 'Lax',
                         secure: isProduction,
                         path: '/',

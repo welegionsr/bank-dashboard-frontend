@@ -31,7 +31,7 @@ export default function RegisterPage() {
     const validateForm = () => {
         const newErrors = {};
         if (!validateEmail(email)) newErrors.email = "Invalid email format!";
-        if (!validatePassword(password)) newErrors.password = "Password must be at least 6 characters!";
+        if (!validatePassword(password)) newErrors.password = "Password must be at least 8 characters long, contain a letter, a number, and a special character.";
         if (!validateName(name)) newErrors.name = "Name field cannot be empty!";
         if (!validatePhone(phone)) newErrors.phone = "Phone number must be 10 digits!";
         if (!validateBalance(balance)) newErrors.balance = "Balance must be a positive number!";

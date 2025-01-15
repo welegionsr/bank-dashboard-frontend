@@ -178,7 +178,7 @@ export default function SendMoneyPopup({ show, onHide }) {
                     <Alert variant="danger">{error}</Alert>
                 }
             </Modal.Body>
-            <Modal.Footer className="d-flex justify-content-between">
+            <Modal.Footer className={`${success ? "" : "d-flex justify-content-between"}`}>
                 {cancelButton}
                 {submitButton}
             </Modal.Footer>
