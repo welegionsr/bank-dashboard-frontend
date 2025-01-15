@@ -4,18 +4,29 @@ import apiClient from "@/utils/api";
 import Head from "next/head";
 import { useState } from "react";
 import { Alert, Button, Card, Container, Form } from "react-bootstrap";
-import { Envelope } from "react-bootstrap-icons";
+import { Envelope, Eraser } from "react-bootstrap-icons";
 import { useAuth } from "../layout";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import { validateEmail } from "@/utils/validators";
 
 export default function ForgotPasswordPage() {
     const [email, setEmail] = useState('');
     const [submitted, setSubmitted] = useState(false);
     const [sent, setSent] = useState(false);
     const { setMessage, setMessageType } = useAuth();
+    const [errors, setErrors] = useState({});
+
+    const validateForm = () => {
+        const newErrors = {};
+        if (!validateEmail(email)) newErrors.email = "Invalid email format!";
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!validateForm()) return;
 
         setSubmitted(true);
 
@@ -42,7 +53,7 @@ export default function ForgotPasswordPage() {
                 autoplay
                 loop
             />
-            <p style={{padding: '0.5rem', fontWeight: '500', textAlign: 'center'}}>
+            <p style={{ padding: '0.5rem', fontWeight: '500', textAlign: 'center' }}>
                 If an account with this email exists, an email was sent!
             </p>
             <p style={{ padding: '0.5rem', textAlign: 'center' }}>
@@ -67,12 +78,12 @@ export default function ForgotPasswordPage() {
                     placeholder="..."
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    // isInvalid={!!errors.email}
+                    isInvalid={!!errors.email}
                     required
                 />
-                {/* <Form.Control.Feedback type="invalid">
-                                    {errors.email}
-                                </Form.Control.Feedback> */}
+                <Form.Control.Feedback type="invalid">
+                    {errors.email}
+                </Form.Control.Feedback>
                 <Form.Text className="text-muted">
                     The email address of the account.
                 </Form.Text>
@@ -91,24 +102,15 @@ export default function ForgotPasswordPage() {
             </Head>
             <Container className="mt-4">
                 <Card className="form">
-                    <Card.Body>
-                        <Card.Text className="mt-2" style={{ padding: '0 0.5rem' }}>
-                            {cardBodyContent}
-                            {formContent}
-                        </Card.Text>
+                    <Card.Header>
+                        <Eraser size="20" color="black" /> {' '}
+                        <span>Request a password reset</span>
+                    </Card.Header>
+                    <Card.Body style={{ padding: '1.4rem' }}>
+                        {cardBodyContent}
+                        <hr />
+                        {formContent}
                     </Card.Body>
-                    {/* <Card.Footer>
-                        <EnvelopeX size="22" color="black" style={{ marginRight: "4px" }} /> {' '}
-                        Didn&apos;t get an email? {' '}
-                        <Button
-                            variant="link"
-                            style={{ padding: "0", cursor: "pointer", textDecoration: "none" }}
-                            onClick={handleResend}
-                            disabled={resent}
-                        >
-                            {resent ? `Resend in ${Math.floor(resendTimer / 60)}:${String(resendTimer % 60).padStart(2, '0')}...` : "Send a new one!"}
-                        </Button>
-                    </Card.Footer> */}
                 </Card>
             </Container>
         </>

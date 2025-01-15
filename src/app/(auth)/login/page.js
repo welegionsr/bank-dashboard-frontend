@@ -2,12 +2,12 @@
 
 import '@/app/(auth)/auth.css';
 import Head from 'next/head';
-import { Button, Card, Container, Form, Spinner } from "react-bootstrap";
+import { Button, Card, Container, Form, Spinner, Stack } from "react-bootstrap";
 import apiClient from "@utils/api";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../layout";
-import { BoxArrowInRight, Envelope, Key, PersonPlusFill, PersonVcardFill } from 'react-bootstrap-icons';
+import { BoxArrowInRight, Envelope, Eraser, Key, PersonPlusFill, PersonVcardFill } from 'react-bootstrap-icons';
 import { useUser } from '@/utils/UserContext';
 import { setCookie } from 'nookies';
 import { validateEmail, validateLoginPassword } from '@/utils/validators';
@@ -163,9 +163,21 @@ export default function LoginPage() {
                                 </Form.Control.Feedback>
                             </Form.Group>
 
-                            <Button className='login-btn' variant="primary" type="submit" disabled={submitted}>
-                                {submitButtonContent}
-                            </Button>
+                            <Stack dir='vertical' gap={3} style={{alignItems: 'start'}}>
+                                <Button className='login-btn' variant="primary" type="submit" disabled={submitted} style={{width: 'fit-content'}}>
+                                    {submitButtonContent}
+                                </Button>
+
+                                <Button 
+                                    variant='link'
+                                    onClick={() => router.push('/forgot-password')}
+                                    style={{textDecoration: 'none', padding: '0', fontSize: '0.9rem'}}
+                                >
+                                    <Eraser size={16} />{' '}
+                                    <span style={{verticalAlign: 'middle'}}> Forgot your password?</span>
+                                </Button>
+                            </Stack>
+
                         </Form>
                     </Card.Body>
                     <Card.Footer>
